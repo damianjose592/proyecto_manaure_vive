@@ -149,27 +149,26 @@
 }
 @media (max-width: 1023px) {
   .detalle-layout { grid-template-columns: 1fr; }
-  .detalle-aside { position: static; }
+  .detalle-aside { display: none; }
   .dt-galeria { grid-template-columns: 1fr; height: auto; }
   .dt-galeria-main { height: 288px; }
   .dt-galeria-side { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: none; }
   .dt-galeria-thumb { min-height: 76px; }
   .detalle-highlights { grid-template-columns: 1fr; }
+  .detalle-barra { display: block; position: fixed; right: 0; bottom: 0; left: 0; z-index: 900; border-top: 1px solid #e7e0d2; background: rgba(255, 253, 248, .96); backdrop-filter: blur(8px); box-shadow: 0 -8px 24px rgba(32, 54, 42, .1); }
+  .detalle-barra-inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: min(100% - 36px, 1280px); margin: 0 auto; padding: 12px 0 calc(12px + env(safe-area-inset-bottom)); }
+  .detalle-barra-precio span { display: block; color: #68766e; font-size: 11px; font-weight: 600; }
+  .detalle-barra-precio strong { color: #c26a0a; font-size: 22px; font-weight: 800; line-height: 1.1; }
+  .detalle-barra-btn { padding: 12px 22px; border: 0; border-radius: 999px; background: linear-gradient(135deg, #2e7d32, #1b5e20); color: #fff; font-size: 12px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; box-shadow: 0 10px 20px rgba(46, 125, 50, .28); cursor: pointer; }
 }
-@media (max-width: 760px) {
+@media (max-width: 560px) {
   .detalle-contenedor { width: min(100% - 36px, 1280px); padding: 20px 0 110px; }
   .dt-topnav-inner { width: min(100% - 36px, 1280px); }
-  .detalle-aside { display: none; }
   .detalle-reco-grid { grid-template-columns: repeat(2, 1fr); }
   .detalle-especs { grid-template-columns: 1fr; }
   .detalle-rel-grid { grid-template-columns: 1fr; }
   .detalle-rel-card img { height: 160px; }
   .detalle-convenios-vermas { width: 100%; }
-  .detalle-barra { display: block; position: fixed; right: 0; bottom: 0; left: 0; z-index: 900; border-top: 1px solid #e7e0d2; background: rgba(255, 253, 248, .96); backdrop-filter: blur(8px); box-shadow: 0 -8px 24px rgba(32, 54, 42, .1); }
-  .detalle-barra-inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: min(100% - 36px, 1280px); margin: 0 auto; padding: 12px 0; }
-  .detalle-barra-precio span { display: block; color: #68766e; font-size: 11px; font-weight: 600; }
-  .detalle-barra-precio strong { color: #c26a0a; font-size: 22px; font-weight: 800; line-height: 1.1; }
-  .detalle-barra-btn { padding: 12px 22px; border: 0; border-radius: 999px; background: linear-gradient(135deg, #2e7d32, #1b5e20); color: #fff; font-size: 12px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; box-shadow: 0 10px 20px rgba(46, 125, 50, .28); cursor: pointer; }
 .dt-galeria-main.dt-ampliar { cursor: zoom-in; }
 .dt-visor { position: fixed; inset: 0; z-index: 1400; display: grid; place-items: center; background: rgba(220, 235, 217, 0.72); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
 .dt-visor img { max-width: 88vw; max-height: 80vh; border-radius: 16px; object-fit: contain; box-shadow: 0 24px 60px rgba(20, 40, 28, 0.35); }

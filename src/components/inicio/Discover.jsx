@@ -1,9 +1,15 @@
+import { useState } from 'react';
 import '../../styles/inicio/Discover.css';
 import { categoriasEcoturismo } from '../../utils/inicio/Ecoturismo.utils';
+import { PAQUETES_DEMO } from './Descubre';
 
 const INTERESES_POR_ORDEN = ['naturaleza', 'aventura', 'fotografia', 'deportes', 'gastronomia', 'cultura'];
 
 function Discover() {
+  const [temaIdx, setTemaIdx] = useState(null);
+  const temaId = temaIdx === null ? null : INTERESES_POR_ORDEN[temaIdx];
+  const categoriaSel = temaIdx === null ? null : categoriasEcoturismo[temaIdx];
+  const coinciden = temaId ? PAQUETES_DEMO.filter(p => p.intereses.includes(temaId)) : [];
   return (
     <section className="discover section-ecoturismo" id="experiencias" data-reveal="section">
       <div className="section-head center" data-reveal="heading">
@@ -14,7 +20,13 @@ function Discover() {
 
       <div className="circulos-grid" data-reveal="content">
         {categoriasEcoturismo.map((categoria, i) => (
-          <a className="circulo-tema" href={`#descubre/${INTERESES_POR_ORDEN[i] || 'aventura'}`} key={categoria.nombre}>
+          <button
+            type="button"
+            className={`circulo-tema${temaIdx === i ? ' active' : ''}`}
+            onClick={() => setTemaIdx(temaIdx === i ? null : i)}
+            aria-pressed={temaIdx === i}
+            key={categoria.nombre}
+          >
             <span className="circulo-tema-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 {(categoria.icono.rects || []).map((rect, j) => <rect key={`r${j}`} {...rect} />)}
@@ -28,9 +40,27 @@ function Discover() {
               </svg>
             </span>
             <span className="circulo-tema-nombre">{categoria.nombre}</span>
-          </a>
+          </button>
         ))}
       </div>
+
+      {categoriaSel && (
+        <div className="temas-resultados" aria-live="polite" data-reveal="content">
+          <p className="temas-resultados-titulo">
+            {coinciden.length === 1 ? '1 paquete' : `${coinciden.length} paquetes`} de {categoriaSel.nombre}
+          </p>
+          {coinciden.map(p => (
+            <a className="tema-resultado" key={p.titulo} href={`#paquete/${p.paquete}`}>
+              <img src={p.imagen} alt={p.titulo} loading="lazy" />
+              <span className="tema-resultado-texto">
+                <strong>{p.titulo}</strong>
+                <em>{p.precio} &middot; {p.base}</em>
+              </span>
+              <span aria-hidden="true">&rarr;</span>
+            </a>
+          ))}
+        </div>
+      )}
 
       <div className="descubrir-banner" data-reveal="content">
         <div className="descubrir-left">

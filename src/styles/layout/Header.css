@@ -185,9 +185,13 @@ button.reserve-top {
   display: block;
 }
 
+.reserve-menu {
+  display: none;
+}
+
 /* ══════════════════
    RESPONSIVE
-══════════════════ */
+   ══════════════════ */
 @media (max-width: 1024px) {
   .nav {
     position: fixed;
@@ -228,6 +232,26 @@ button.reserve-top {
   .header-search {
     margin-left: 0;
   }
+  .header-actions {
+    display: none;
+  }
+  .reserve-menu {
+    display: block;
+    width: 100%;
+    min-height: 52px;
+    margin-top: 14px;
+    padding: 15px;
+    border: 0;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #2e7d32, #1b5e20);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(46, 125, 50, 0.28);
+  }
 }
 
 @keyframes mobileNavReveal {
@@ -241,7 +265,7 @@ button.reserve-top {
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 560px) {
   .site-header {
     height: 68px;
     padding: 0 16px;
@@ -264,7 +288,7 @@ button.reserve-top {
   }
 }
 
-@media (max-width: 360px) {
+@media (max-width: 380px) {
   .site-header {
     gap: 7px;
     padding: 0 10px;

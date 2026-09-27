@@ -118,7 +118,7 @@
   border-color: #d9750d;
   color: #fff;
 }
-@media (max-width: 850px) {
+@media (max-width: 768px) {
   .cta {
     gap: 20px;
   }

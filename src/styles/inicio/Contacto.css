@@ -132,7 +132,7 @@ a.contacto-fila:hover {
   border: 0;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 768px) {
   .contacto-grid {
     grid-template-columns: 1fr;
     gap: 32px;

@@ -385,7 +385,7 @@ Campo `clase`: `'' | 'green' | 'blue'` → color del tag en `Featured`.
 - **Props:** `menuOpen:boolean`, `onMenuToggle:()=>void`, `galeriaActiva:boolean`, `seccionActiva:string='inicio'`, `onReservar:()=>void`.
 - **Estado/efectos internos:** ninguno.
 - **Funciones:** `closeAll()` (cierra menú), `isSectionActive(sec)` (compara con `seccionActiva`).
-- **Render:** `header.site-header#top` → `a.brand[href=#inicio]` (`logo-principal.png`) + `button.menu-toggle[aria-expanded]` ☰ + `nav#site-navigation.nav[.open]` (6 links con clase `active`) + `.header-actions` (solo `button.reserve-top` “Reservar” sin icono → abre modal `reserva-modal` en `App.js` con `ReservarExperiencia`). Sin `header-search`.
+- **Render:** `header.site-header#top` → `a.brand[href=#inicio]` (`logo-principal.png`) + `button.menu-toggle[aria-expanded]` ☰ + `nav#site-navigation.nav[.open]` (6 links + `button.reserve-menu` grandote al final, visible solo en menú móvil ≤1024) + `.header-actions` (solo `button.reserve-top` “Reservar” sin icono → abre modal `reserva-modal` en `App.js`; oculto en móvil). Sin `header-search`.
 
 ### 8.2 `layout/Footer.jsx` (46 líneas)
 
@@ -397,7 +397,9 @@ Campo `clase`: `'' | 'green' | 'blue'` → color del tag en `Featured`.
 - **Const:** `WHATSAPP_URL='https://wa.me/573012706114'`.
 - **Render:** `a.whatsapp-floating-button[target=_blank]` + `span.whatsapp-tooltip` ("¿Necesitas ayuda?") + `svg.whatsapp-icon`.
 
-### 8.4 `inicio/Hero.jsx` (73 líneas) — slider fullscreen
+### 8.4 `inicio/Hero.jsx` — slider fullscreen (rev. responsive 2026-09-27)
+
+- Sin hacks de desplazamiento (`margin-top:-45px`/`top:60px` eliminados → flujo normal, fin del solapamiento botones-texto en móvil); slogan con regla única móvil sobre los dots (se eliminó el caso 360px que lo mandaba debajo); dots con área táctil ampliada (`::after inset:-10px`, visual intacto); botones full-width 48px en ≤560px.
 
 - **Props:** ninguna. `INTERVAL=5000, slides[5]`.
 - **Estados:** `current:number=0`, `prev:number|null`, `animating:boolean`.
@@ -405,10 +407,10 @@ Campo `clase`: `'' | 'green' | 'blue'` → color del tag en `Featured`.
 - **Efecto:** `setInterval(next, INTERVAL)` + cleanup.
 - **Render:** `section.hero#inicio` → `slides.map div.hero-bg[.active/.exit]` (`backgroundImage`) + `.hero-overlay` + `.hero-content` (eyebrow `MANAURE VIVE`, `h1`, `p`, 2 `a.btn`: `#experiencias` / `#paquetes`) + `.hero-slogan` ("¡Vive lo extraordinario!") + `.hero-dots` + `.hero-progress-bar[animationDuration=INTERVAL]`.
 
-### 8.5 `inicio/Discover.jsx` (rev. 2026-09-26: tarjetas eliminadas; ahora 6 círculos → filtro preseleccionado)
+### 8.5 `inicio/Discover.jsx` (rev. 2026-09-27: círculos filtran en la sección, sin redirigir)
 
-- **Props/estado:** ninguno. `categoriasEcoturismo[6]` + mapa por orden a intereses `[naturaleza, aventura, fotografia, deportes, gastronomia, cultura]`.
-- **Render:** `section.discover#experiencias[data-reveal]` → head (`¿QUÉ QUIERES HACER?` + `h2 Descubre tu experiencia`) + `.circulos-grid`: `a.circulo-tema[href=#descubre/<tema>]` (círculo verde 84px con icono SVG + etiqueta) + banner `descubrir-banner` (`COMENZAR AHORA → #descubre`). `App.js` parsea `#descubre/<id>` (validado, fallback a `#descubre`) y `Descubre` acepta `interesInicial`.
+- **Props/estado:** ninguno salvo `temaIdx:number|null` local. `categoriasEcoturismo[6]` + mapa por orden a intereses + `PAQUETES_DEMO` (importado de `Descubre.jsx`).
+- **Render:** `section.discover#experiencias[data-reveal]` → head + `.circulos-grid`: `button.circulo-tema[.active]` (toggle, sin navegar) + `.temas-resultados` (conteo + filas `a.tema-resultado[href=#paquete/N]` con foto/título/precio) + banner `descubrir-banner`. Sin rutas nuevas; `#descubre/<id>` y `interesInicial` eliminados de `App`/`Descubre`.
 
 ### 8.6 `inicio/Featured.jsx` — muestra 8 de 10 (`PAQUETES_VISIBLES = 8`)
 
@@ -421,6 +423,7 @@ Campo `clase`: `'' | 'green' | 'blue'` → color del tag en `Featured`.
 - **Props:** `onAbrirFoto?:(indiceGlobal:number)=>void`.
 - **Lógica:** `fotosVistaPrevia = FOTOS_GALERIA.slice(0, ceil(len*0.4))` (~13 de 33).
 - **Render:** `section.gallery#destinos` → head + `.gallery-grid`: `button.gallery-item-button[aria-label][data-reveal]` con `img[loading=lazy]`; `onClick → onAbrirFoto(findIndex)`.
+- **Mosaico móvil (rev. responsive 2026-09-27):** ≤768 a 3 col; ≤560 primera foto a doble ancho+alto + cada 5ª a doble ancho (`dense`), radio 14px. Desktop intacto.
 
 ### 8.8 `inicio/DetallePaquete.jsx` — galería mockup + convenios N + relacionados (rev. 2026-09-26)
 
@@ -428,6 +431,7 @@ Campo `clase`: `'' | 'green' | 'blue'` → color del tag en `Featured`.
 - **Estados:** `fecha/adultos/ninos/bebes/nombre/documento/telefono/recogida`, `modalAbierto`, `favorito`, `preguntaAbierta`, `visor`, `mostrarConvenios` (nuevo: colapsado N convenios).
 - **Galería (medidas mockup `paquete_responsive_pc_movil.html`):** `grid 2fr/1fr height:384px radius:24px`, principal `object-cover + hover scale`, lateral `grid 1fr/1fr`, thumb 2 con overlay dinámico `{N} fotos + Ver más` → abre visor en la foto clicada (`setVisor(i+1)`). Móvil: principal 288px, lateral en fila.
 - **Convenios (Solución A):** si `N<=3` pinta normal; si `N>3` pinta 3 compactos (logo 48px) + botón `Ver los N convenios (3 de N)` que expande mini-fila. Cards `Featured` muestran `2 +N más`.
+- **Responsive (2026-09-27):** barra móvil + aside oculto desde 1023 (tablet igual que móvil); `detalle-barra-inner` con `safe-area`; escala de breakpoints unificada a 1024/768/560/380 en toda la página (Hero 900/600/360, Header 600/360, Descubre 620, CTA 850, Contacto 900, Galería full 360 → escala; Footer fusionado de 4 bloques a 2; `Featured` 1050/650 se conserva).
 - **Relacionados:** bloque `También te puede interesar` con 3 cards (misma categoría primero, excluye actual) → `href=#paquete/M` (App.js remonta por `key` + scroll suave + animación `dt-entrada` 0.45s en `.detalle-contenedor`, con `prefers-reduced-motion`).
 - **Loader de detalle (2026-09-26):** `DetallePaquete` muestra 1100ms la misma pantalla de carga del filtro (`db-cargando-full` + spinner + barra + 3 `db-skel`, estilos de `Descubre.css`) antes del contenido; así el cambio entre paquetes relacionados se percibe. Tests con `timeout: 3000`.
 - **FAQ (2026-09-26):** el toggle abierto usa escape unicode U+2212 en string JS (antes entidad HTML en string y se pintaba literal).
@@ -458,7 +462,7 @@ Campo `clase`: `'' | 'green' | 'blue'` → color del tag en `Featured`.
 - **`src/components/inicio/Descubre.jsx` (rev. 2026-09-26):** `PAQUETES_DEMO[6]` remapeados a nuevos índices (0 Adrenalina, 1 Cumbres, 3 Metallura, 6 Sabores, 5 Safari, 2 Grano-Fruta) + `DESTACADOS_DEMO[3]` (Cumbres/Adrenalina/Sabores). Avatares apilados + texto socios (2 por demo, sin cambios de diseño).
 - **Fix filtros Descubre (2026-09-26, bug grave):** intereses fuera del reveal (`data-reveal` quitado + blindaje `opacity:1`) para que la selección nunca pueda quedar invisible (solo verde + sombra, sin badge/check extra); duraciones honestas `[Día completo, Fin de semana]` (se eliminó “Medio día” huérfano que daba 0 resultados); toggle-off en duración/estilo/compañía; estilo y compañía ahora sí filtran (`estilos[]`/`companias[]` por demo); botón “Limpiar filtros” como enlace sutil en cabecera y estado vacío (diseño previo restaurado; botón `db-find` sin flecha `→`); `db-find` sticky móvil con safe-area). Regresión en `src/Descubre.filtros.test.js` (6 tests: +reveal, +círculo, +acordeón móvil).
 - **Fix pantalla vacía tras buscar (2026-09-26, causa raíz):** el loader desmontaba hero/filtro/resultados y al remontar los nodos `data-reveal` quedaban sin `is-visible` (el observer de `App` no se re-ejecuta) → `opacity:0` permanente en navegador real. `Descubre` ahora re-sincroniza su reveal con efecto local en `[cargando]` (mismo observer/threshold). Cubierto por test reveal con `IntersectionObserver` simulado.
-- **Filtro móvil opción A + círculos (2026-09-27):** hero compacto móvil (320px, sin párrafo); `GrupoColapsable` **solo-móvil** (`plegable`, PC idéntico a antes) incluyendo intereses; barra sticky con resumen (`resumenFiltros`); círculos de Experiencias → `#descubre/<tema>` con interés preseleccionado (`App` valida + `interesInicial`).
+- **Filtro móvil opción A + círculos (2026-09-27):** hero compacto móvil (320px, sin párrafo); `GrupoColapsable` **solo-móvil** (`plegable`, PC idéntico a antes) incluyendo intereses; barra sticky con resumen (`resumenFiltros`); filtro compacto en PC (menos padding, título 22px, choices 68px).
 - **Fix selección+móvil Descubre (2026-09-26):** la lógica React estaba bien (test temporal lo confirmó, luego eliminado); se reforzó lo visual: sombra en activos (el badge check naranja se retiró a petición), `focus-visible`, iconos con `flex:none/display:block`. Móvil ≤620px: minis con wrap (`flex:1 1 70px`, antes se desbordaban 4 en 360px), grupos apilados con divisor inferior, sort a ancho completo, meta/partner con wrap, featured-head con wrap, botón sticky con `safe-area`.
 
 - **`src/index.js`:** `createRoot(#root).render(<StrictMode><App/></StrictMode>)` + `import './styles/global/index.css'` + `reportWebVitals()` sin callback.

@@ -52,7 +52,7 @@ const SOCIO_LOGO = {
 
 const logoSocio = nombre => `${process.env.PUBLIC_URL}/assets/partners/${SOCIO_LOGO[nombre]}`;
 
-const PAQUETES_DEMO = [
+export const PAQUETES_DEMO = [
   {
     titulo: 'Adrenalina Serrana',
     desc: 'Parapente + Cuatrimoto + R\u00edo',
@@ -166,12 +166,8 @@ function GrupoColapsable({ id, abierto, onCambiar, titulo, subtitulo, children, 
   );
 }
 
-function Descubre({ interesInicial = null }) {
-  const [intereses, setIntereses] = useState(() => {
-    const inicial = new Set();
-    if (interesInicial) inicial.add(interesInicial);
-    return inicial;
-  });
+function Descubre() {
+  const [intereses, setIntereses] = useState(() => new Set());
   const [estilo, setEstilo] = useState(null);
   const [compania, setCompania] = useState(null);
   const [duracion, setDuracion] = useState(null);

@@ -81,14 +81,14 @@
   background: #fffdf8;
   border-radius: 18px;
   box-shadow: 0 18px 45px rgba(24, 48, 38, 0.12);
-  padding: 20px 25px 24px;
+  padding: 16px 20px 20px;
   border: 1px solid #e7e0d2;
 }
 
 .db-filter-title {
   margin: 0;
   font-family: var(--font-title);
-  font-size: 24px;
+  font-size: 22px;
   color: #06452f;
 }
 .db-filter-head {
@@ -137,7 +137,7 @@
 
 .db-choice {
   position: relative;
-  min-height: 76px;
+  min-height: 68px;
   font-size: 12px;
   border: 1px solid #d8d5cb;
   background: #f1ece0;
@@ -826,7 +826,7 @@ body.db-cargando-pagina .db-cargando-full {
   background: rgba(255, 255, 255, 0.25);
   font-size: 12px;
 }
-@media (max-width: 620px) {
+@media (max-width: 560px) {
   .db-hero {
     height: 320px;
   }

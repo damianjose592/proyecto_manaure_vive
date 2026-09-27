@@ -63,15 +63,17 @@ test('tras buscar, el contenido vuelve a ser visible (reveal)', async () => {  c
   }
 }, 15000);
 
-test('circulo de experiencia abre el filtro con el tema marcado', () => {
+test('circulos filtran paquetes en la seccion sin redirigir', () => {
   window.location.hash = '#inicio';
-  const primera = render(<App />);
-  const circulo = screen.getByRole('link', { name: /^naturaleza$/i });
-  expect(circulo.getAttribute('href')).toBe('#descubre/naturaleza');
-  primera.unmount();
-  window.location.hash = '#descubre/naturaleza';
   render(<App />);
-  expect(screen.getByRole('button', { name: /^naturaleza$/i }).className).toMatch(/active/);
+  const circulo = screen.getByRole('button', { name: /^naturaleza$/i });
+  fireEvent.click(circulo);
+  expect(window.location.hash).toBe('#inicio');
+  expect(screen.getByText(/1 paquete de naturaleza/i)).toBeInTheDocument();
+  const enlace = screen.getByRole('link', { name: /edici.*metallura/i });
+  expect(enlace.getAttribute('href')).toBe('#paquete/3');
+  fireEvent.click(circulo);
+  expect(screen.queryByRole('link', { name: /edici.*metallura/i })).not.toBeInTheDocument();
 });
 
 test('movil: grupos en acordeon cerrado por defecto', () => {

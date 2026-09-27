@@ -26,20 +26,11 @@ const obtenerIndicePaquete = () => {
   return coincidencia ? Number(coincidencia[1]) : null;
 };
 
-const INTERESES_DESCUBRE = ['naturaleza', 'aventura', 'fotografia', 'gastronomia', 'cultura', 'romance', 'deportes', 'relajacion'];
-
-const obtenerInteresDescubre = () => {
-  const coincidencia = window.location.hash.match(/^#descubre\/([a-z]+)$/);
-  const id = coincidencia ? coincidencia[1] : null;
-  return INTERESES_DESCUBRE.includes(id) ? id : null;
-};
-
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [vistaGaleria, setVistaGaleria] = useState(() => window.location.hash === '#galeria');
   const [vistaPaquetes, setVistaPaquetes] = useState(() => window.location.hash === '#paquetes-todos');
-  const [vistaDescubre, setVistaDescubre] = useState(() => window.location.hash === '#descubre' || obtenerInteresDescubre() !== null);
-  const [interesDescubre, setInteresDescubre] = useState(obtenerInteresDescubre);
+  const [vistaDescubre, setVistaDescubre] = useState(() => window.location.hash === '#descubre');
   const [indicePaquete, setIndicePaquete] = useState(obtenerIndicePaquete);
   const [reservaActiva, setReservaActiva] = useState(() =>
     /^#reserva\//.test(window.location.hash)
@@ -50,7 +41,7 @@ function App() {
     const hash = window.location.hash.replace('#', '').trim();
     if (!hash || hash === 'inicio') return 'inicio';
     if (hash === 'galeria') return 'galeria';
-    if (hash === 'descubre' || hash.startsWith('descubre/')) return 'experiencias';
+    if (hash === 'descubre') return 'experiencias';
     if (hash === 'paquetes-todos') return 'paquetes';
     return ['experiencias', 'paquetes', 'destinos', 'convenios', 'nosotros', 'reserva', 'contacto'].includes(hash)
       ? hash
@@ -76,8 +67,7 @@ function App() {
         if (
           h === 'galeria' ||
           h === 'paquetes-todos' ||
-          h === 'descubre' ||
-          h.startsWith('descubre/')
+          h === 'descubre'
         ) {
           window.scrollTo(0, 0);
           return;
@@ -104,7 +94,7 @@ function App() {
     const alCambiarHash = () => {
       const esGaleria = window.location.hash === '#galeria';
       const esPaquetesTodos = window.location.hash === '#paquetes-todos';
-      const esDescubre = window.location.hash === '#descubre' || obtenerInteresDescubre() !== null;
+      const esDescubre = window.location.hash === '#descubre';
       const indice = obtenerIndicePaquete();
       const esPaquete = Number.isInteger(indice) && Boolean(paquetesEcoturismo[indice]);
       const esReserva = /^#reserva\//.test(window.location.hash);
@@ -130,7 +120,6 @@ function App() {
       setVistaGaleria(esGaleria);
       setVistaPaquetes(esPaquetesTodos);
       setVistaDescubre(esDescubre);
-      setInteresDescubre(obtenerInteresDescubre());
       desplazarSegunHash();
     };
     window.addEventListener('hashchange', alCambiarHash);
@@ -256,7 +245,7 @@ function App() {
         </main>
       ) : vistaDescubre ? (
         <main key="descubre" ref={scrollRevealRef}>
-          <Descubre key={interesDescubre || 'todos'} interesInicial={interesDescubre} />
+          <Descubre />
         </main>
       ) : (
         <main key="inicio" ref={scrollRevealRef}>

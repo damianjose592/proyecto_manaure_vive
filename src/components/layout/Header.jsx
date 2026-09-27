@@ -40,6 +40,7 @@ function Header({ menuOpen, onMenuToggle, galeriaActiva, seccionActiva = 'inicio
         <a className={galeriaActiva || isSectionActive('galeria') ? 'active' : ''} href="#galeria" onClick={closeAll}>Galería</a>
         <a className={isSectionActive('contacto') ? 'active' : ''} href="#contacto" onClick={closeAll}>Contacto</a>
         <a className={isSectionActive('convenios') ? 'active' : ''} href="#convenios" onClick={closeAll}>Convenios</a>
+        <button type="button" className="reserve-menu" onClick={() => { closeAll(); if (onReservar) onReservar(); }}>Reservar</button>
       </nav>
 
       <div className="header-actions">
