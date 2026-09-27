@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-function useScrollReveal() {
+function useScrollReveal(deps = []) {
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -25,7 +25,8 @@ function useScrollReveal() {
 
     elements.forEach(element => observer.observe(element));
     return () => observer.disconnect();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps);
 
   return containerRef;
 }

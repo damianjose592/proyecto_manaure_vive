@@ -1,9 +1,11 @@
 import '../../styles/layout/Header.css';
 
-function Header({ menuOpen, onMenuToggle }) {
+function Header({ menuOpen, onMenuToggle, galeriaActiva, seccionActiva = 'inicio', onReservar }) {
   const closeAll = () => {
     if (menuOpen) onMenuToggle();
   };
+
+  const isSectionActive = seccion => seccion === seccionActiva;
 
   return (
     <header className="site-header" id="top">
@@ -12,15 +14,11 @@ function Header({ menuOpen, onMenuToggle }) {
       <a className="brand" href="#inicio" onClick={closeAll}>
         <div className="brand-logo-wrap">
           <img
-            src={`${process.env.PUBLIC_URL}/assets/brand/logo-header-footer.png`}
-            alt="Villa Adelaida – Centro Turístico y Ecológico"
+            src={`${process.env.PUBLIC_URL}/assets/brand/logo-principal.png`}
+            alt="Manaure Vive - Ecoturismo"
             className="brand-logo-img"
           />
         </div>
-        <span className="brand-text">
-          <strong>VILLA ADELAIDA</strong>
-          <small>Centro Turístico y Ecológico</small>
-        </span>
       </a>
 
       {/* HAMBURGUESA */}
@@ -31,18 +29,22 @@ function Header({ menuOpen, onMenuToggle }) {
         aria-controls="site-navigation"
         onClick={onMenuToggle}
       >
-        ☰
+        <span aria-hidden="true">&#9776;</span>
       </button>
 
       {/* NAV CENTRAL */}
       <nav id="site-navigation" className={`nav${menuOpen ? ' open' : ''}`}>
-        <a href="#nosotros" onClick={closeAll}>Nosotros</a>
-        <a href="#experiencias" onClick={closeAll}>Experiencias</a>
-        <a href="#sazon" onClick={closeAll}>Nuestra Sazón</a>
-        <a href="#recuerdos" onClick={closeAll}>Recuerdos</a>
-        <a href="#contacto" onClick={closeAll}>Contacto</a>
-        <a className="btn-reserve-master" href="#reserva-mesas" onClick={closeAll}>Reservar</a>
+        <a className={galeriaActiva ? '' : isSectionActive('inicio') ? 'active' : ''} href="#inicio" onClick={closeAll}>Inicio</a>
+        <a className={isSectionActive('experiencias') ? 'active' : ''} href="#descubre" onClick={closeAll}>Experiencias</a>
+        <a className={isSectionActive('paquetes') ? 'active' : ''} href="#paquetes-todos" onClick={closeAll}>Paquetes</a>
+        <a className={galeriaActiva || isSectionActive('galeria') ? 'active' : ''} href="#galeria" onClick={closeAll}>Galería</a>
+        <a className={isSectionActive('contacto') ? 'active' : ''} href="#contacto" onClick={closeAll}>Contacto</a>
+        <a className={isSectionActive('convenios') ? 'active' : ''} href="#convenios" onClick={closeAll}>Convenios</a>
       </nav>
+
+      <div className="header-actions">
+        <button type="button" className="reserve-top" onClick={() => { closeAll(); if (onReservar) onReservar(); }}>Reservar</button>
+      </div>
 
     </header>
   );

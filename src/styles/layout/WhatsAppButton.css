@@ -10,8 +10,12 @@
   border-radius: var(--radius-circle);
   background: #25d366;
   color: var(--color-white);
-  box-shadow: 0 8px 24px rgba(18, 51, 29, .24), 0 0 0 1px rgba(255, 255, 255, .28);
-  transition: transform .2s ease, box-shadow .2s ease;
+  box-shadow:
+    0 8px 24px rgba(18, 51, 29, 0.24),
+    0 0 0 1px rgba(255, 255, 255, 0.28);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
   animation: whatsapp-float-pulse 3.8s ease-in-out infinite;
 }
 
@@ -19,7 +23,9 @@
 .whatsapp-floating-button:focus-visible {
   color: var(--color-white);
   transform: translateY(-3px) scale(1.04);
-  box-shadow: 0 12px 30px rgba(18, 51, 29, .3), 0 0 0 4px rgba(37, 211, 102, .2);
+  box-shadow:
+    0 12px 30px rgba(18, 51, 29, 0.3),
+    0 0 0 4px rgba(37, 211, 102, 0.2);
   animation-play-state: paused;
 }
 
@@ -49,11 +55,13 @@
   pointer-events: none;
   opacity: 0;
   transform: translate(5px, -50%);
-  transition: opacity .2s ease, transform .2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 .whatsapp-tooltip::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   right: -5px;
@@ -70,8 +78,18 @@
 }
 
 @keyframes whatsapp-float-pulse {
-  0%, 72%, 100% { box-shadow: 0 8px 24px rgba(18, 51, 29, .24), 0 0 0 1px rgba(255, 255, 255, .28); }
-  80% { box-shadow: 0 8px 24px rgba(18, 51, 29, .24), 0 0 0 8px rgba(37, 211, 102, 0); }
+  0%,
+  72%,
+  100% {
+    box-shadow:
+      0 8px 24px rgba(18, 51, 29, 0.24),
+      0 0 0 1px rgba(255, 255, 255, 0.28);
+  }
+  80% {
+    box-shadow:
+      0 8px 24px rgba(18, 51, 29, 0.24),
+      0 0 0 8px rgba(37, 211, 102, 0);
+  }
 }
 
 @media (max-width: 600px) {
@@ -82,10 +100,18 @@
     height: 54px;
   }
 
-  .whatsapp-icon { width: 29px; height: 29px; }
-  .whatsapp-tooltip { display: none; }
+  .whatsapp-icon {
+    width: 29px;
+    height: 29px;
+  }
+  .whatsapp-tooltip {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .whatsapp-floating-button { animation: none; transition: none; }
+  .whatsapp-floating-button {
+    animation: none;
+    transition: none;
+  }
 }

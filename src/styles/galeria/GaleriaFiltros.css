@@ -1,0 +1,36 @@
+.galeria-filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.galeria-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 19px;
+  border: 1px solid #dedacd;
+  border-radius: 999px;
+  background: #fffdf8;
+  color: #19382c;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+}
+.galeria-filter svg {
+  width: 17px;
+  height: 17px;
+  display: block;
+}
+.galeria-filter:hover {
+  border-color: #06452f;
+  transform: translateY(-1px);
+}
+.galeria-filter.active {
+  border-color: #06452f;
+  background: #06452f;
+  color: #fffdf8;
+}

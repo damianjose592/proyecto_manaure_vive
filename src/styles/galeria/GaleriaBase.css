@@ -1,0 +1,121 @@
+.galeria {
+  background: #f7f4ec;
+  padding: 130px var(--page-side-padding) 48px;
+}
+
+.galeria-head {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(220px, 0.8fr);
+  align-items: end;
+  gap: 28px;
+  margin-bottom: 28px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(6, 69, 47, 0.12);
+}
+.galeria-intro {
+  max-width: 620px;
+}
+.galeria-head-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  text-align: right;
+}
+.galeria-head > div {
+  text-align: left;
+}
+.galeria-head h2 {
+  margin: 0;
+  color: #06452f;
+  font-family: var(--font-title);
+  font-size: clamp(36px, 3.6vw, 52px);
+  font-weight: 600;
+  line-height: 1.02;
+}
+.galeria-head p {
+  max-width: 560px;
+  margin: 12px 0 0;
+  color: #68766e;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.galeria-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #0d5d46;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.galeria-meta::before {
+  content: "";
+  display: inline-block;
+  width: 28px;
+  height: 1px;
+  background: rgba(13, 93, 70, 0.5);
+}
+.galeria-head .galeria-note {
+  max-width: 360px;
+  margin: 0;
+  color: #06452f;
+  font-family: var(--font-script);
+  font-size: clamp(20px, 3.2vw, 25px);
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.05;
+  text-align: right;
+  text-shadow: 0 2px 8px rgba(6, 69, 47, 0.12);
+  transform: rotate(-5deg);
+}
+.galeria-back {
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 14px;
+  border: 1px solid #06452f;
+  border-radius: 8px;
+  color: #06452f;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: background 0.2s, color 0.2s;
+}
+.galeria-back:hover {
+  background: #06452f;
+  color: #fffdf8;
+}
+.galeria-note-highlight {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+  padding-bottom: 16px;
+}
+.galeria-note-highlight::after {
+  content: "";
+  position: absolute;
+  left: -8px;
+  right: -22px;
+  bottom: 2px;
+  height: 8px;
+  background: transparent;
+  border-top: 4px solid #f28c18;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+}
+.galeria-note-highlight::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  right: -16px;
+  bottom: -2px;
+  height: 7px;
+  background: transparent;
+  border-top: 2px solid #f5a623;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  opacity: 0.9;
+}

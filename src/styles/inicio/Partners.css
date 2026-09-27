@@ -1,0 +1,125 @@
+.partners {
+  padding: 36px var(--page-side-padding);
+  background: #f7f4ec;
+  color: #19382c;
+  position: relative;
+  overflow: visible;
+}
+.partners-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.partners .eyebrow {
+  color: #f28c18;
+}
+.partners h2 {
+  max-width: 570px;
+  color: #06452f;
+}
+.partners-head p {
+  margin: 18px 0 0;
+  color: #68766e;
+}
+.white-outline {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 12px 18px;
+  border: 1px solid #06452f;
+  color: #06452f;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: background 0.2s;
+  text-decoration: none;
+}
+.white-outline:hover {
+  background: rgba(6, 69, 47, 0.08);
+}
+.white-outline span {
+  font-size: 18px;
+}
+.partner-grid {
+  position: relative;
+  overflow: hidden;
+  margin-top: 20px;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 8%,
+    #000 92%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 8%,
+    #000 92%,
+    transparent 100%
+  );
+}
+.partner-track {
+  display: flex;
+  align-items: flex-start;
+  gap: 28px;
+  width: max-content;
+  animation: partnerLoop 46s linear infinite;
+}
+.partner {
+  flex: 0 0 clamp(130px, 15vw, 170px);
+  min-height: 108px;
+  padding: 8px 10px;
+  color: #19382c;
+  text-align: center;
+  text-decoration: none;
+}
+.partner-logo-wrap {
+  display: grid;
+  height: 68px;
+  margin-bottom: 10px;
+  place-items: center;
+}
+.partner-logo {
+  display: block;
+  width: 64px;
+  height: 64px;
+  border: 3px solid #fffdf8;
+  border-radius: 50%;
+  background: #fffdf8;
+  object-fit: contain;
+  box-shadow: 0 3px 10px rgba(6, 69, 47, 0.14);
+}
+.partner h3 {
+  margin: 0;
+  color: #19382c;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+@keyframes partnerLoop {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-50% - 7px));
+  }
+}
+@media (max-width: 560px) {
+  .partners {
+    padding: 68px 18px;
+  }
+  .partner-track {
+    gap: 18px;
+  }
+  .partner {
+    flex-basis: 118px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .partner-track {
+    animation: none;
+  }
+}
