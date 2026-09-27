@@ -456,13 +456,21 @@ Campo `clase`: `'' | 'green' | 'blue'` → color del tag en `Featured`.
 ### 8.12 Entry points
 
 - **`src/components/inicio/Descubre.jsx` (rev. 2026-09-26):** `PAQUETES_DEMO[6]` remapeados a nuevos índices (0 Adrenalina, 1 Cumbres, 3 Metallura, 6 Sabores, 5 Safari, 2 Grano-Fruta) + `DESTACADOS_DEMO[3]` (Cumbres/Adrenalina/Sabores). Avatares apilados + texto socios (2 por demo, sin cambios de diseño).
-- **Fix filtros Descubre (2026-09-26, bug grave):** intereses fuera del reveal (`data-reveal` quitado + blindaje `opacity:1`) para que la selección nunca pueda quedar invisible (solo verde + sombra, sin badge/check extra); duraciones honestas `[Día completo, Fin de semana]` (se eliminó “Medio día” huérfano que daba 0 resultados); toggle-off en duración/estilo/compañía; estilo y compañía ahora sí filtran (`estilos[]`/`companias[]` por demo); botón “Limpiar filtros” como enlace sutil en cabecera y estado vacío (diseño previo restaurado; botón `db-find` sin flecha `→`); `db-find` sticky móvil con safe-area). Regresión en `src/Descubre.filtros.test.js` (4 tests).
+- **Fix filtros Descubre (2026-09-26, bug grave):** intereses fuera del reveal (`data-reveal` quitado + blindaje `opacity:1`) para que la selección nunca pueda quedar invisible (solo verde + sombra, sin badge/check extra); duraciones honestas `[Día completo, Fin de semana]` (se eliminó “Medio día” huérfano que daba 0 resultados); toggle-off en duración/estilo/compañía; estilo y compañía ahora sí filtran (`estilos[]`/`companias[]` por demo); botón “Limpiar filtros” como enlace sutil en cabecera y estado vacío (diseño previo restaurado; botón `db-find` sin flecha `→`); `db-find` sticky móvil con safe-area). Regresión en `src/Descubre.filtros.test.js` (6 tests: +reveal, +círculo, +acordeón móvil).
 - **Fix pantalla vacía tras buscar (2026-09-26, causa raíz):** el loader desmontaba hero/filtro/resultados y al remontar los nodos `data-reveal` quedaban sin `is-visible` (el observer de `App` no se re-ejecuta) → `opacity:0` permanente en navegador real. `Descubre` ahora re-sincroniza su reveal con efecto local en `[cargando]` (mismo observer/threshold). Cubierto por test reveal con `IntersectionObserver` simulado.
-- **Fix selección+móvil Descubre (2026-09-26):** la lógica React estaba bien (test temporal lo confirmó, luego eliminado); se reforzó lo visual: badge check naranja en `.db-choice.active`, sombra en activos, `focus-visible`, iconos con `flex:none/display:block`. Móvil ≤620px: minis con wrap (`flex:1 1 70px`, antes se desbordaban 4 en 360px), grupos apilados con divisor inferior, sort a ancho completo, meta/partner con wrap, featured-head con wrap, botón sticky con `safe-area`.
+- **Filtro móvil opción A + círculos (2026-09-27):** hero compacto móvil (320px, sin párrafo); `GrupoColapsable` **solo-móvil** (`plegable`, PC idéntico a antes) incluyendo intereses; barra sticky con resumen (`resumenFiltros`); círculos de Experiencias → `#descubre/<tema>` con interés preseleccionado (`App` valida + `interesInicial`).
+- **Fix selección+móvil Descubre (2026-09-26):** la lógica React estaba bien (test temporal lo confirmó, luego eliminado); se reforzó lo visual: sombra en activos (el badge check naranja se retiró a petición), `focus-visible`, iconos con `flex:none/display:block`. Móvil ≤620px: minis con wrap (`flex:1 1 70px`, antes se desbordaban 4 en 360px), grupos apilados con divisor inferior, sort a ancho completo, meta/partner con wrap, featured-head con wrap, botón sticky con `safe-area`.
 
 - **`src/index.js`:** `createRoot(#root).render(<StrictMode><App/></StrictMode>)` + `import './styles/global/index.css'` + `reportWebVitals()` sin callback.
 - **`src/reportWebVitals.js`:** si `onPerfEntry` es función, importa `web-vitals` y suscribe `getCLS/FID/FCP/LCP/TTFB`.
 - **`src/setupTests.js`:** `import '@testing-library/jest-dom'`.
+
+### 8.13 `inicio/ReservarExperiencia.jsx` — wizard (rev. 2026-09-26: arreglo completo)
+
+- **Props:** `paqueteInicial=null|{}`, `onCerrar`, `mostrarVolver=true`, `etiquetaVolver='Volver a experiencias'` (App modal pasa `'Cerrar'`).
+- **Arreglos:** hora opcional (no bloquea paso 1; resumen muestra “Hora a convenir”); precio estimado visible (`precioPorPersona` + `formatoCOP` en utils; total = precio × personas, marcado como referencia); teléfono valida 10 dígitos con mensajes (botón ya no se deshabilita a ciegas: valida al pulsar); desplegable cierra con `touchstart` (iOS) y en móvil es `<select>` nativo (`reserva-nativo`, sin fallos táctiles); head del modal sin duplicado “Reenviar”.
+- **Modal móvil:** hoja inferior (`92dvh`, radio superior, `overscroll:contain`, safe-area, footer sticky); steps solo números en ≤560px.
+- **Regresión:** `src/Reservar.test.js` (4 tests: +select nativo móvil).
 
 ---
 
@@ -617,7 +625,7 @@ flowchart TD
 
 ## 14. Tests
 
-`src/App.test.js` (RTL + jest-dom, `beforeEach: location.hash=''` + `src/Descubre.filtros.test.js` con 5 tests de filtros; total 9 tests en verde):
+`src/App.test.js` (RTL + jest-dom, `beforeEach: location.hash=''` + `src/Descubre.filtros.test.js` con 6 tests + `src/Reservar.test.js` con 4 tests; total 14 tests en verde):
 
 | # | Acción                                        | Aserción                                                                                        |
 | - | ---------------------------------------------- | ------------------------------------------------------------------------------------------------ |

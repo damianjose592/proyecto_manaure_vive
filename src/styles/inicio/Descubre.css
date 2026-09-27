@@ -199,6 +199,47 @@
   border-right: 1px solid #e7e0d2;
   padding-right: 18px;
 }
+.db-filter-group > .db-mini-options {
+  padding-top: 10px;
+}
+.db-filter-group > .db-interests {
+  padding-top: 12px;
+}
+.db-filter-sum {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.db-filter-sum::-webkit-details-marker {
+  display: none;
+}
+.db-filter-sum::after {
+  content: "";
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border: solid #06452f;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+}
+.db-filter-group[open] > .db-filter-sum::after {
+  transform: rotate(225deg);
+}
+.db-find-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.db-find-resumen {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #68766e;
+}
 
 .db-filter-group h3 {
   font-family: var(--font-title);
@@ -787,15 +828,18 @@ body.db-cargando-pagina .db-cargando-full {
 }
 @media (max-width: 620px) {
   .db-hero {
-    height: 440px;
+    height: 320px;
   }
   .db-hero-content {
     left: 25px;
     right: 25px;
-    top: 105px;
+    top: 72px;
   }
   .db-hero h1 {
-    font-size: 38px;
+    font-size: 34px;
+  }
+  .db-hero p {
+    display: none;
   }
   .db-volver-row {
     width: min(100% - 36px, 1200px);
@@ -862,10 +906,16 @@ body.db-cargando-pagina .db-cargando-full {
   .db-skeletons {
     grid-template-columns: 1fr;
   }
-  .db-find {
+  .db-find-bar {
     position: sticky;
     bottom: calc(12px + env(safe-area-inset-bottom));
     z-index: 20;
+    background: rgba(255, 253, 248, 0.97);
+    border: 1px solid #e7e0d2;
+    border-radius: 16px;
+    padding: 10px;
+  }
+  .db-find {
     width: 100%;
     justify-content: center;
     padding: 16px 20px;

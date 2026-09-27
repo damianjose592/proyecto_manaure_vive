@@ -26,14 +26,14 @@ function Contacto() {
               </div>
             </a>
 
-            <a className="contacto-fila" href="mailto:reservas@villamartha.com.co">
+            <a className="contacto-fila" href="mailto:manaurevive@gmail.com">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <rect x="2" y="4" width="20" height="16" rx="2" />
                 <path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" />
               </svg>
               <div>
                 <p className="contacto-fila-label">Correo</p>
-                <p className="contacto-fila-valor">reservas@villamartha.com.co</p>
+                <p className="contacto-fila-valor">manaurevive@gmail.com</p>
               </div>
             </a>
 

@@ -59,7 +59,7 @@ export const construirMensajeReserva = ({
   const lineas = [
     `Hola, quiero reservar: ${(paquete && paquete.titulo) || ''}.`,
     `Fecha: ${fecha}`,
-    `Hora: ${hora}`,
+    hora ? `Hora: ${hora}` : '',
     `Ubicaci\u00f3n: ${(paquete && paquete.ubicacion) || ''}`,
     `Convenio: ${(paquete && paquete.socio) || ''}`,
     paquete && paquete.precio ? `Precio: ${paquete.precio}` : '',
@@ -73,3 +73,11 @@ export const construirMensajeReserva = ({
 
 export const construirUrlWhatsApp = mensaje =>
   `https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(mensaje)}`;
+
+export const precioPorPersona = paquete => {
+  if (!paquete || !paquete.precio) return null;
+  const numero = Number(String(paquete.precio).replace(/[^0-9]/g, ''));
+  return Number.isFinite(numero) && numero > 0 ? numero : null;
+};
+
+export const formatoCOP = valor => `$${valor.toLocaleString('es-CO')}`;

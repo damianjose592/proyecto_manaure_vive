@@ -8,6 +8,8 @@ import {
   obtenerProximosDias,
   construirMensajeReserva,
   construirUrlWhatsApp,
+  precioPorPersona,
+  formatoCOP,
 } from '../../utils/inicio/ReservarExperiencia.utils';
 
 function formatearEtiquetaDia(dias, valor) {
@@ -33,9 +35,11 @@ function Desplegable({ etiqueta, valor, opciones, onCambiar, textoVacio }) {
       if (e.key === 'Escape') setAbierto(false);
     };
     document.addEventListener('mousedown', cerrarAfuera);
+    document.addEventListener('touchstart', cerrarAfuera);
     document.addEventListener('keydown', cerrarTecla);
     return () => {
       document.removeEventListener('mousedown', cerrarAfuera);
+      document.removeEventListener('touchstart', cerrarAfuera);
       document.removeEventListener('keydown', cerrarTecla);
     };
   }, [abierto]);
@@ -79,7 +83,7 @@ function Desplegable({ etiqueta, valor, opciones, onCambiar, textoVacio }) {
   );
 }
 
-function ReservarExperiencia({ paqueteInicial = null, onCerrar, mostrarVolver = true }) {
+function ReservarExperiencia({ paqueteInicial = null, onCerrar, mostrarVolver = true, etiquetaVolver = 'Volver a experiencias' }) {
   const [paso, setPaso] = useState(0);
   const [experiencia, setExperiencia] = useState(() =>
     paqueteInicial ? paqueteInicial.titulo : ''
@@ -90,18 +94,30 @@ function ReservarExperiencia({ paqueteInicial = null, onCerrar, mostrarVolver = 
   const [nombre, setNombre] = useState('');
   const [telefono, setTelefono] = useState('');
   const [observaciones, setObservaciones] = useState('');
+  const [errorNombre, setErrorNombre] = useState(false);
+  const [errorTelefono, setErrorTelefono] = useState(false);
 
   const diasDisponibles = obtenerProximosDias(21);
 
   const paqueteElegido = paquetesEcoturismo.find(p => p.titulo === experiencia) || null;
+  const precioRef = precioPorPersona(paqueteElegido);
+  const totalEstimado = precioRef ? precioRef * personas : null;
 
   const puedeContinuarPaso1 =
-    Boolean(experiencia) && Boolean(fecha) && Boolean(hora) && personas > 0;
-  const puedeContinuarPaso2 = nombre.trim().length >= 2 && telefono.trim().length >= 6;
+    Boolean(experiencia) && Boolean(fecha) && personas > 0;
+  const telefonoDigitos = telefono.replace(/[^0-9]/g, '');
 
   const avanzar = () => {
     if (paso === 0 && !puedeContinuarPaso1) return;
-    if (paso === 1 && !puedeContinuarPaso2) return;
+    if (paso === 1) {
+      const nombreOk = nombre.trim().length >= 2;
+      const telefonoOk = telefonoDigitos.length >= 10;
+      setErrorNombre(!nombreOk);
+      setErrorTelefono(!telefonoOk);
+      if (!nombreOk || !telefonoOk) return;
+    }
+    setErrorNombre(false);
+    setErrorTelefono(false);
     setPaso(p => p + 1);
   };
 
@@ -125,15 +141,9 @@ function ReservarExperiencia({ paqueteInicial = null, onCerrar, mostrarVolver = 
       <section className="reserva-wizard-inner">
         {mostrarVolver && (
         <div className="reserva-wizard-head">
-          {paso === 2 ? (
-            <button type="button" className="reserva-back" onClick={aperturarWhatsApp}>
-              Reenviar por WhatsApp <span aria-hidden="true">&rarr;</span>
-            </button>
-          ) : (
-            <button type="button" className="reserva-back" onClick={onCerrar}>
-              &larr; Volver a experiencias
-            </button>
-          )}
+          <button type="button" className="reserva-back" onClick={onCerrar}>
+            {paso === 2 ? etiquetaVolver : <>&larr; {etiquetaVolver}</>}
+          </button>
         </div>
         )}
 
@@ -183,7 +193,7 @@ function ReservarExperiencia({ paqueteInicial = null, onCerrar, mostrarVolver = 
               </label>
 
               <label className="reserva-field">
-                <span className="reserva-field-label">Hora</span>
+                <span className="reserva-field-label">Hora (opcional)</span>
                 <Desplegable
                   etiqueta="Hora"
                   valor={hora}
@@ -195,46 +205,56 @@ function ReservarExperiencia({ paqueteInicial = null, onCerrar, mostrarVolver = 
             </div>
 
             <label className="reserva-field">
-              <span className="reserva-field-label">&iquest;Cu&aacute;ntas personas?</span>
-              <div className="reserva-personas">
-                {opcionesPersonas.map(n => (
-                  <button
-                    key={n}
-                    type="button"
-                    className={`reserva-persona${n === personas ? ' active' : ''}`}
-                    onClick={() => setPersonas(n)}
-                  >
-                    {n}
-                  </button>
-                ))}
-              </div>
-            </label>
+                <span className="reserva-field-label">&iquest;Cu&aacute;ntas personas?</span>
+                <div className="reserva-personas">
+                  {opcionesPersonas.map(n => (
+                    <button
+                      key={n}
+                      type="button"
+                      className={`reserva-persona${n === personas ? ' active' : ''}`}
+                      onClick={() => setPersonas(n)}
+                    >
+                      {n}
+                    </button>
+                  ))}
+                </div>
+                {totalEstimado ? (
+                  <p className="reserva-estimado">Estimado: <strong>{formatoCOP(totalEstimado)}</strong> <small>({personas} {personas === 1 ? 'persona' : 'personas'} &middot; precio de referencia)</small></p>
+                ) : (
+                  <p className="reserva-estimado">Precio a convenir por WhatsApp.</p>
+                )}
+              </label>
           </div>
         )}
 
         {paso === 1 && (
           <div className="reserva-step-body">
-            <label className="reserva-field">
-              <span className="reserva-field-label">Tu nombre</span>
-              <input
-                type="text"
-                value={nombre}
-                onChange={e => setNombre(e.target.value)}
-                placeholder="&iquest;C&oacute;mo te llamas?"
-                className="reserva-input"
-              />
-            </label>
+              <label className="reserva-field">
+                <span className="reserva-field-label">Tu nombre</span>
+                <input
+                  type="text"
+                  value={nombre}
+                  onChange={e => { setNombre(e.target.value); if (errorNombre) setErrorNombre(false); }}
+                  placeholder="&iquest;C&oacute;mo te llamas?"
+                  className="reserva-input"
+                  aria-invalid={errorNombre}
+                />
+                {errorNombre && <p className="reserva-error">Escribe tu nombre.</p>}
+              </label>
 
             <label className="reserva-field">
-              <span className="reserva-field-label">Tel&eacute;fono de contacto</span>
-              <input
-                type="tel"
-                value={telefono}
-                onChange={e => setTelefono(e.target.value)}
-                placeholder="Ej: 3123456789"
-                className="reserva-input"
-              />
-            </label>
+                <span className="reserva-field-label">Tel&eacute;fono de contacto</span>
+                <input
+                  type="tel"
+                  inputMode="tel"
+                  value={telefono}
+                  onChange={e => { setTelefono(e.target.value); if (errorTelefono) setErrorTelefono(false); }}
+                  placeholder="Ej: 3123456789"
+                  className="reserva-input"
+                  aria-invalid={errorTelefono}
+                />
+                {errorTelefono && <p className="reserva-error">Escribe un numero de 10 digitos.</p>}
+              </label>
 
             <label className="reserva-field">
               <span className="reserva-field-label">Observaciones (opcional)</span>
@@ -251,12 +271,13 @@ function ReservarExperiencia({ paqueteInicial = null, onCerrar, mostrarVolver = 
 
         {paso === 2 && (
           <div className="reserva-step-body reserva-resumen">
-            <div className="reserva-resumen-card">
-              <h3>{paqueteElegido ? paqueteElegido.titulo : experiencia}</h3>
-              <p>{personas} {personas === 1 ? 'persona' : 'personas'}</p>
-              <p>{fecha ? formatearEtiquetaDia(diasDisponibles, fecha) : ''}</p>
-              <p>{hora ? formatearEtiquetaHora(franjasHorarias, hora) : ''}</p>
-              {nombre && <p>{nombre}</p>}
+              <div className="reserva-resumen-card">
+                <h3>{paqueteElegido ? paqueteElegido.titulo : experiencia}</h3>
+                <p>{personas} {personas === 1 ? 'persona' : 'personas'}</p>
+                <p>{fecha ? formatearEtiquetaDia(diasDisponibles, fecha) : ''}</p>
+                <p>{hora ? formatearEtiquetaHora(franjasHorarias, hora) : 'Hora a convenir'}</p>
+                {totalEstimado && <p><strong>Total estimado: {formatoCOP(totalEstimado)}</strong> (referencia)</p>}
+                {nombre && <p>{nombre}</p>}
               {telefono && <p>{telefono}</p>}
               {observaciones && <p>{observaciones}</p>}
             </div>
@@ -278,7 +299,7 @@ function ReservarExperiencia({ paqueteInicial = null, onCerrar, mostrarVolver = 
               type="button"
               className="reserva-btn"
               onClick={avanzar}
-              disabled={paso === 0 ? !puedeContinuarPaso1 : !puedeContinuarPaso2}
+              disabled={paso === 0 && !puedeContinuarPaso1}
             >
               {paso === 1 ? 'Ver resumen' : 'Continuar'} <span aria-hidden="true">&rarr;</span>
             </button>

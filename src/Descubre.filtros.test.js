@@ -73,3 +73,19 @@ test('circulo de experiencia abre el filtro con el tema marcado', () => {
   render(<App />);
   expect(screen.getByRole('button', { name: /^naturaleza$/i }).className).toMatch(/active/);
 });
+
+test('movil: grupos en acordeon cerrado por defecto', () => {
+  const OriginalMM = window.matchMedia;
+  window.matchMedia = () => ({ matches: true, media: '', addEventListener() {}, removeEventListener() {}, addListener() {}, removeListener() {} });
+  try {
+    window.location.hash = '#descubre';
+    render(<App />);
+    const acordeones = document.querySelectorAll('details.db-filter-group');
+    expect(acordeones.length).toBe(4);
+    acordeones.forEach(a => expect(a.open).toBe(false));
+    expect(screen.getByRole('button', { name: /^naturaleza$/i })).toBeInTheDocument();
+  } finally {
+    if (OriginalMM === undefined) { delete window.matchMedia; }
+    else { window.matchMedia = OriginalMM; }
+  }
+});

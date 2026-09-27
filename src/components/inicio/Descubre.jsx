@@ -127,6 +127,45 @@ const DESTACADOS_DEMO = [
   { etiqueta: 'Gastronom\u00eda', titulo: 'Sabores del Perij\u00e1', precio: 'Desde $175.000', imagen: 'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1000&q=85' },
 ];
 
+function useEsMovil() {
+  const [esMovil, setEsMovil] = useState(() => typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 620px)').matches);
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return undefined;
+    const consulta = window.matchMedia('(max-width: 620px)');
+    const actualizar = e => setEsMovil(e.matches);
+    if (consulta.addEventListener) consulta.addEventListener('change', actualizar);
+    else if (consulta.addListener) consulta.addListener(actualizar);
+    return () => {
+      if (consulta.removeEventListener) consulta.removeEventListener('change', actualizar);
+      else if (consulta.removeListener) consulta.removeListener(actualizar);
+    };
+  }, []);
+  return esMovil;
+}
+
+function GrupoColapsable({ id, abierto, onCambiar, titulo, subtitulo, children, plegable }) {
+  if (!plegable) {
+    return (
+      <div className="db-filter-group">
+        <h3>{titulo}</h3>
+        <p>{subtitulo}</p>
+        {children}
+      </div>
+    );
+  }
+  return (
+    <details className="db-filter-group" open={abierto} onToggle={e => onCambiar(id, e.target.open)}>
+      <summary className="db-filter-sum">
+        <span className="db-filter-sum-text">
+          <h3>{titulo}</h3>
+          <p>{subtitulo}</p>
+        </span>
+      </summary>
+      {children}
+    </details>
+  );
+}
+
 function Descubre({ interesInicial = null }) {
   const [intereses, setIntereses] = useState(() => {
     const inicial = new Set();
@@ -212,6 +251,35 @@ function Descubre({ interesInicial = null }) {
 
   const alternarOpcion = (actual, id, fijar) => fijar(actual === id ? null : id);
 
+  const esMovil = useEsMovil();
+  const [grupos, setGrupos] = useState(null);
+  const grupoAbierto = id => (grupos ? grupos.has(id) : !esMovil);
+  const alternarGrupo = (id, abierto) => {
+    setGrupos(prev => {
+      const base = prev ? new Set(prev) : new Set(!esMovil ? ['estilo', 'compania', 'duracion'] : []);
+      if (abierto) base.add(id);
+      else base.delete(id);
+      return base;
+    });
+  };
+
+  const nombreSel = (lista, id) => {
+    const hallado = lista.find(x => x.id === id);
+    return hallado ? hallado.etiqueta : null;
+  };
+  const etiquetasElegidas = [
+    ...INTERESES.filter(i => intereses.has(i.id)).map(i => i.etiqueta),
+    nombreSel(ESTILOS, estilo),
+    nombreSel(COMPANIAS, compania),
+    nombreSel(DURACIONES, duracion),
+  ].filter(Boolean);
+  const totalElegidos = etiquetasElegidas.length;
+  const resumenFiltros = totalElegidos === 0
+    ? ''
+    : totalElegidos <= 2
+      ? etiquetasElegidas.join(' \u00b7 ')
+      : `${etiquetasElegidas.slice(0, 2).join(' \u00b7 ')} +${totalElegidos - 2}`;
+
   const precioNumero = texto => Number(String(texto).replace(/[^0-9]/g, '')) || 0;
 
   const base = aplicados
@@ -258,30 +326,61 @@ function Descubre({ interesInicial = null }) {
       <section className="db-filter-wrap" data-reveal="section">
         <div className="db-filter" data-reveal="content">
           <div className="db-filter-head">
-            <h2 className="db-filter-title">1. &iquest;Qu&eacute; te gustar&iacute;a experimentar?</h2>
+            {!esMovil && <h2 className="db-filter-title">1. &iquest;Qu&eacute; te gustar&iacute;a experimentar?</h2>}
             <button type="button" className="db-limpiar-link" onClick={limpiar}>Limpiar filtros</button>
           </div>
-          <p className="db-filter-sub">Selecciona uno o varios intereses</p>
+          {!esMovil && <p className="db-filter-sub">Selecciona uno o varios intereses</p>}
 
-          <div className="db-interests">
-            {INTERESES.map(item => (
-              <button
-                key={item.id}
-                type="button"
-                className={`db-choice${intereses.has(item.id) ? ' active' : ''}`}
-                onClick={() => alternarInteres(item.id)}
-                aria-pressed={intereses.has(item.id)}
-              >
-                <span className="db-icon">{item.icon}</span>
-                <span>{item.etiqueta}</span>
-              </button>
-            ))}
-          </div>
+          {esMovil ? (
+            <GrupoColapsable
+              id="intereses"
+              plegable
+              abierto={grupoAbierto('intereses')}
+              onCambiar={alternarGrupo}
+              titulo={<>1. &iquest;Qu&eacute; te gustar&iacute;a experimentar?</>}
+              subtitulo="Selecciona uno o varios intereses"
+            >
+              <div className="db-interests">
+                {INTERESES.map(item => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    className={`db-choice${intereses.has(item.id) ? ' active' : ''}`}
+                    onClick={() => alternarInteres(item.id)}
+                    aria-pressed={intereses.has(item.id)}
+                  >
+                    <span className="db-icon">{item.icon}</span>
+                    <span>{item.etiqueta}</span>
+                  </button>
+                ))}
+              </div>
+            </GrupoColapsable>
+          ) : (
+            <div className="db-interests">
+              {INTERESES.map(item => (
+                <button
+                  key={item.id}
+                  type="button"
+                  className={`db-choice${intereses.has(item.id) ? ' active' : ''}`}
+                  onClick={() => alternarInteres(item.id)}
+                  aria-pressed={intereses.has(item.id)}
+                >
+                  <span className="db-icon">{item.icon}</span>
+                  <span>{item.etiqueta}</span>
+                </button>
+              ))}
+            </div>
+          )}
 
           <div className="db-subfilters">
-            <div className="db-filter-group">
-              <h3>2. &iquest;C&oacute;mo quieres vivirla?</h3>
-              <p>Elige el estilo de experiencia</p>
+            <GrupoColapsable
+              id="estilo"
+              plegable={esMovil}
+              abierto={grupoAbierto('estilo')}
+              onCambiar={alternarGrupo}
+              titulo={<>2. &iquest;C&oacute;mo quieres vivirla?</>}
+              subtitulo="Elige el estilo de experiencia"
+            >
               <div className="db-mini-options">
                 {ESTILOS.map(item => (
                   <button
@@ -296,11 +395,16 @@ function Descubre({ interesInicial = null }) {
                   </button>
                 ))}
               </div>
-            </div>
+            </GrupoColapsable>
 
-            <div className="db-filter-group">
-              <h3>3. &iquest;Con qui&eacute;n vienes?</h3>
-              <p>Selecciona la compa&ntilde;&iacute;a</p>
+            <GrupoColapsable
+              id="compania"
+              plegable={esMovil}
+              abierto={grupoAbierto('compania')}
+              onCambiar={alternarGrupo}
+              titulo={<>3. &iquest;Con qui&eacute;n vienes?</>}
+              subtitulo={<>Selecciona la compa&ntilde;&iacute;a</>}
+            >
               <div className="db-mini-options">
                 {COMPANIAS.map(item => (
                   <button
@@ -315,11 +419,16 @@ function Descubre({ interesInicial = null }) {
                   </button>
                 ))}
               </div>
-            </div>
+            </GrupoColapsable>
 
-            <div className="db-filter-group">
-              <h3>4. &iquest;Cu&aacute;nto tiempo tienes?</h3>
-              <p>Elige la duraci&oacute;n</p>
+            <GrupoColapsable
+              id="duracion"
+              plegable={esMovil}
+              abierto={grupoAbierto('duracion')}
+              onCambiar={alternarGrupo}
+              titulo={<>4. &iquest;Cu&aacute;nto tiempo tienes?</>}
+              subtitulo={<>Elige la duraci&oacute;n</>}
+            >
               <div className="db-mini-options">
                 {DURACIONES.map(item => (
                   <button
@@ -334,9 +443,12 @@ function Descubre({ interesInicial = null }) {
                   </button>
                 ))}
               </div>
-            </div>
+            </GrupoColapsable>
 
-            <button type="button" className="db-find" onClick={buscar}>Ver paquetes <span className="db-find-num">{conteoBorrador}</span></button>
+            <div className="db-find-bar">
+              {resumenFiltros !== '' && <span className="db-find-resumen">{resumenFiltros}</span>}
+              <button type="button" className="db-find" onClick={buscar}>Ver paquetes <span className="db-find-num">{conteoBorrador}</span></button>
+            </div>
           </div>
         </div>
       </section>

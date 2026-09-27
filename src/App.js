@@ -290,7 +290,7 @@ function App() {
             aria-modal="true"
             aria-label="Reservar experiencia"
           >
-            <ReservarExperiencia paqueteInicial={null} onCerrar={() => setReservaModal(false)} />
+            <ReservarExperiencia paqueteInicial={null} onCerrar={() => setReservaModal(false)} etiquetaVolver="Cerrar" />
           </div>
         </div>
       )}
