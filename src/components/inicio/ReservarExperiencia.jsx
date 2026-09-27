@@ -169,7 +169,7 @@ function ReservarExperiencia({ paqueteInicial = null, onCerrar, mostrarVolver = 
 
         {paso === 0 && (
           <div className="reserva-step-body">
-            <label className="reserva-field">
+            <div className="reserva-field">
               <span className="reserva-field-label">Experiencia a vivir</span>
               <Desplegable
                 etiqueta="Experiencia a vivir"
@@ -178,10 +178,10 @@ function ReservarExperiencia({ paqueteInicial = null, onCerrar, mostrarVolver = 
                 onCambiar={setExperiencia}
                 opciones={paquetesEcoturismo.map(p => ({ valor: p.titulo, etiqueta: `${p.titulo} - ${p.socio}` }))}
               />
-            </label>
+            </div>
 
             <div className="reserva-row">
-              <label className="reserva-field">
+              <div className="reserva-field">
                 <span className="reserva-field-label">Fecha</span>
                 <Desplegable
                   etiqueta="Fecha"
@@ -190,9 +190,9 @@ function ReservarExperiencia({ paqueteInicial = null, onCerrar, mostrarVolver = 
                   onCambiar={setFecha}
                   opciones={diasDisponibles}
                 />
-              </label>
+              </div>
 
-              <label className="reserva-field">
+              <div className="reserva-field">
                 <span className="reserva-field-label">Hora (opcional)</span>
                 <Desplegable
                   etiqueta="Hora"
@@ -201,11 +201,11 @@ function ReservarExperiencia({ paqueteInicial = null, onCerrar, mostrarVolver = 
                   onCambiar={setHora}
                   opciones={franjasHorarias.map(f => ({ valor: f.valor, etiqueta: `${f.etiqueta} - ${f.descripcion}` }))}
                 />
-              </label>
+              </div>
             </div>
 
-            <label className="reserva-field">
-                <span className="reserva-field-label">&iquest;Cu&aacute;ntas personas?</span>
+            <div className="reserva-field" role="group" aria-label="&iquest;Cu&aacute;ntas personas?">
+              <span className="reserva-field-label">&iquest;Cu&aacute;ntas personas?</span>
                 <div className="reserva-personas">
                   {opcionesPersonas.map(n => (
                     <button
@@ -223,7 +223,7 @@ function ReservarExperiencia({ paqueteInicial = null, onCerrar, mostrarVolver = 
                 ) : (
                   <p className="reserva-estimado">Precio a convenir por WhatsApp.</p>
                 )}
-              </label>
+              </div>
           </div>
         )}
 

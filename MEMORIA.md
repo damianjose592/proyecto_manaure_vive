@@ -3,7 +3,7 @@
 > **Nombre:** `proyecto_restaurant` (marca pública: **Manaure Vive / Villa Adelaida · Centro Turístico y Ecológico**)
 > **Tipo:** Landing page + Galería + Detalle de paquetes ecoturísticos
 > **Stack:** React 19 + react-scripts 5 (Create React App) · Sin react-router · Enrutamiento manual por `window.location.hash`
-> **Despliegue:** `gh-pages` → `https://fran3004.github.io/proyecto_restaurant` (`homepage` en `package.json`)
+> **Despliegue:** `gh-pages` → `https://fran3004.github.io/proyecto_restaurant` · Vercel → repo propio `damianjose592/proyecto_manaure_vive` rama `main` (`homepage: "."` relativo en `package.json` desde 2026-09-27, sirve en ambos)
 > **Fecha memoria:** 2026-09-26 (rev. 2: 10 paquetes Manaure Vive + convenios N + relacionados)
 > **Archivos base analizados:** `src/App.js` (285 líneas), `src/index.js`, `src/components/**`, `src/utils/**`, `src/styles/**`, `public/index.html`, `public/manifest.json`, `EXPERIENCIAS_Y_SOCIOS.md`
 
@@ -470,7 +470,8 @@ Campo `clase`: `'' | 'green' | 'blue'` → color del tag en `Featured`.
 - **Props:** `paqueteInicial=null|{}`, `onCerrar`, `mostrarVolver=true`, `etiquetaVolver='Volver a experiencias'` (App modal pasa `'Cerrar'`).
 - **Arreglos:** hora opcional (no bloquea paso 1; resumen muestra “Hora a convenir”); precio estimado visible (`precioPorPersona` + `formatoCOP` en utils; total = precio × personas, marcado como referencia); teléfono valida 10 dígitos con mensajes (botón ya no se deshabilita a ciegas: valida al pulsar); desplegable cierra con `touchstart` (iOS) y en móvil es `<select>` nativo (`reserva-nativo`, sin fallos táctiles); head del modal sin duplicado “Reenviar”.
 - **Modal móvil:** hoja inferior (`92dvh`, radio superior, `overscroll:contain`, safe-area, footer sticky); steps solo números en ≤560px.
-- **Regresión:** `src/Reservar.test.js` (4 tests: +select nativo móvil).
+- **Bug label-click (2026-09-27, causa raíz del “no cierra”)**: los botones del paso 1 estaban dentro de `<label>` y el navegador reenviaba cada toque al primer botón (la lista se reabría sola y personas se reseteaba a 1). Solo inputs reales usan `<label>` ahora; el resto son `div` (+ `role=group` en personas). Cubierto por 2 tests.
+- **Regresión:** `src/Reservar.test.js` (5 tests: +cierre táctil, +personas sin reset).
 
 ---
 
@@ -625,7 +626,7 @@ flowchart TD
 
 ## 14. Tests
 
-`src/App.test.js` (RTL + jest-dom, `beforeEach: location.hash=''` + `src/Descubre.filtros.test.js` con 6 tests + `src/Reservar.test.js` con 4 tests; total 14 tests en verde):
+`src/App.test.js` (RTL + jest-dom, `beforeEach: location.hash=''` + `src/Descubre.filtros.test.js` con 6 tests + `src/Reservar.test.js` con 5 tests; total 15 tests en verde):
 
 | # | Acción                                        | Aserción                                                                                        |
 | - | ---------------------------------------------- | ------------------------------------------------------------------------------------------------ |

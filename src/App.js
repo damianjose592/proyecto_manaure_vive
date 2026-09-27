@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './styles/global/App.css';
 import useScrollReveal from './utils/useScrollReveal';
 
@@ -35,7 +35,6 @@ const obtenerInteresDescubre = () => {
 };
 
 function App() {
-  const [cargando, setCargando] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const [vistaGaleria, setVistaGaleria] = useState(() => window.location.hash === '#galeria');
   const [vistaPaquetes, setVistaPaquetes] = useState(() => window.location.hash === '#paquetes-todos');

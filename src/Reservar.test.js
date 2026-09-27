@@ -47,6 +47,13 @@ test('resumen muestra total y hora a convenir sin hora', () => {
   expect(screen.getByText(/hora a convenir/i)).toBeInTheDocument();
 });
 
+test('personas no se resetean al elegir (label no reenvia)', () => {
+  render(<ReservarExperiencia paqueteInicial={paquetesEcoturismo[0]} onCerrar={noop} />);
+  fireEvent.click(screen.getByRole('button', { name: '5' }));
+  expect(screen.getByRole('button', { name: '5' }).className).toMatch(/active/);
+  expect(screen.getByRole('button', { name: '1' }).className).not.toMatch(/active/);
+});
+
 test('movil: el desplegable tactil elige y cierra', () => {
   const OriginalMM = window.matchMedia;
   window.matchMedia = () => ({ matches: true, media: '', addEventListener() {}, removeEventListener() {}, addListener() {}, removeListener() {} });

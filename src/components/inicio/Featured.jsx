@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import '../../styles/inicio/Featured.css';
 import { paquetesEcoturismo } from '../../utils/inicio/Ecoturismo.utils';
 
