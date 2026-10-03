@@ -22,6 +22,7 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 12px;
+  min-width: 0;
   text-align: right;
 }
 .galeria-head > div {
@@ -60,8 +61,10 @@
   background: rgba(13, 93, 70, 0.5);
 }
 .galeria-head .galeria-note {
+  position: relative;
   max-width: 360px;
-  margin: 0;
+  margin: 0 40px 0 0;
+  padding-bottom: 16px;
   color: #06452f;
   font-family: var(--font-script);
   font-size: clamp(20px, 3.2vw, 25px);
@@ -70,6 +73,8 @@
   letter-spacing: 0.01em;
   line-height: 1.05;
   text-align: right;
+  text-wrap: pretty;
+  overflow-wrap: break-word;
   text-shadow: 0 2px 8px rgba(6, 69, 47, 0.12);
   transform: rotate(-5deg);
 }
@@ -94,24 +99,25 @@
   position: relative;
   display: inline-block;
   white-space: nowrap;
-  padding-bottom: 16px;
 }
-.galeria-note-highlight::after {
+/* Curva nace en el borde izquierdo de la nota (la N de Naturaleza)
+   y se extiende por debajo de todo el texto. */
+.galeria-note::after {
   content: "";
   position: absolute;
-  left: -8px;
-  right: -22px;
-  bottom: 2px;
-  height: 8px;
+  left: 0;
+  right: -48px;
+  bottom: 6px;
+  height: 10px;
   background: transparent;
   border-top: 4px solid #f28c18;
   border-radius: 50% 50% 0 0 / 100% 100% 0 0;
 }
-.galeria-note-highlight::before {
+.galeria-note::before {
   content: "";
   position: absolute;
-  left: 6px;
-  right: -16px;
+  left: 25px;
+  right: -40px;
   bottom: -2px;
   height: 7px;
   background: transparent;

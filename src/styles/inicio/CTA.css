@@ -118,13 +118,29 @@
   border-color: #d9750d;
   color: #fff;
 }
+@media (max-width: 1024px) {
+  .cta {
+    gap: 24px;
+  }
+  .cta-slogan {
+    flex-basis: 230px;
+    max-width: 240px;
+    font-size: 28px;
+  }
+  .cta-copy h2 {
+    font-size: 27px;
+  }
+}
 @media (max-width: 768px) {
   .cta {
     gap: 20px;
   }
   .cta-slogan {
     flex-basis: 190px;
+    max-width: 200px;
     font-size: 22px;
+    line-height: 1.05;
+    transform: rotate(-7deg);
   }
   .cta-copy h2 {
     font-size: 26px;
@@ -141,6 +157,10 @@
   }
   .cta-slogan {
     flex: none;
+    max-width: 100%;
+    font-size: 24px;
+    line-height: 1.1;
+    transform: rotate(-6deg);
   }
   .cta-copy {
     flex: none;
@@ -148,5 +168,27 @@
   }
   .cta-copy h2 {
     font-size: 31px;
+  }
+}
+@media (max-width: 380px) {
+  .cta {
+    min-height: 310px;
+    padding: 28px 16px 24px;
+  }
+  .cta-slogan {
+    max-width: 100%;
+    font-size: 21px;
+    line-height: 1.1;
+    transform: rotate(-5deg);
+  }
+  .cta-copy h2 {
+    font-size: 27px;
+  }
+  .cta-copy p {
+    font-size: 12px;
+  }
+  .cta .whatsapp {
+    padding: 12px 18px;
+    font-size: 10px;
   }
 }

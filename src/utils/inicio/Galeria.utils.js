@@ -63,7 +63,7 @@ export const COLORES_CATEGORIA = {
   Naturaleza: '#3b8a55',
   Aventura: '#F28C18',
   Gastronomía: '#c2571b',
-  Tours: '#3d7890',
+  Tours: '#4a9e5c',
   Cultura: '#7c5cbf',
   Momentos: '#0e7c86',
 };

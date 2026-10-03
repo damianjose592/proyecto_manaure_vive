@@ -395,7 +395,7 @@ Campo `clase`: `'' | 'green' | 'blue'` → color del tag en `Featured`.
 ### 8.3 `layout/WhatsAppButton.jsx` (23 líneas)
 
 - **Const:** `WHATSAPP_URL='https://wa.me/573012706114'`.
-- **Render:** `a.whatsapp-floating-button[target=_blank]` + `span.whatsapp-tooltip` ("¿Necesitas ayuda?") + `svg.whatsapp-icon`.
+- **Render:** `a.whatsapp-floating-button[target=_blank]` + `span.whatsapp-tooltip` ("¿Necesitas ayuda?") + `svg.whatsapp-icon`. En móvil va bajo (`bottom:20px`) y solo sube donde hay barra fija (`body.con-barra-detalle` → 88px en detalle, `body.en-descubre` → 150px en filtro; clases que pone `App.js`).
 
 ### 8.4 `inicio/Hero.jsx` — slider fullscreen (rev. responsive 2026-09-27)
 
@@ -454,7 +454,7 @@ Campo `clase`: `'' | 'green' | 'blue'` → color del tag en `Featured`.
 - **Hook:** `useGaleria() → {filtroActivo, setFiltroActivo, fotosFiltradas}`.
 - **Estado:** `seleccionada:number|null = indiceInicial`.
 - **Funciones:** `cambiarFiltro(f)` (resetea + set), `cerrar` (`useCallback`), `avanzar(dir)` (módulo circular), `renderMedia(foto, isLightbox)` (video → `<video controls/autoPlay/muted/loop>` + badge ▶, sino `<img lazy>`).
-- **Efecto:** si hay selección: `keydown` (Escape/Arrows) + `body.overflow=hidden`, cleanup restaura.
+- **Efecto:** si hay selección: `keydown` (Escape/Arrows) + **bloqueo total de scroll** (`body position:fixed` con restauración de `scrollY`; `overflow:hidden` solo no frena iOS) + lightbox con `overscroll:contain`.
 - **Render:** `section.galeria#galeria` → head (`GALERÍA`, `h2 Momentos que inspiran`, `COLOMBIA • N FOTOS`) + `.galeria-filters[role=tablist]` (7 `button[role=tab][aria-selected]`) + `.galeria-grid` (`button.galeria-item.galeria-shape-{i%6}[.featured]` + tag con `COLORES_CATEGORIA` + caption) + lightbox por `createPortal(div[role=dialog][aria-modal], body)` (foto + nav prev/next + count + dots + info + host + link `#paquetes`).
 
 ### 8.12 Entry points
@@ -462,7 +462,7 @@ Campo `clase`: `'' | 'green' | 'blue'` → color del tag en `Featured`.
 - **`src/components/inicio/Descubre.jsx` (rev. 2026-09-26):** `PAQUETES_DEMO[6]` remapeados a nuevos índices (0 Adrenalina, 1 Cumbres, 3 Metallura, 6 Sabores, 5 Safari, 2 Grano-Fruta) + `DESTACADOS_DEMO[3]` (Cumbres/Adrenalina/Sabores). Avatares apilados + texto socios (2 por demo, sin cambios de diseño).
 - **Fix filtros Descubre (2026-09-26, bug grave):** intereses fuera del reveal (`data-reveal` quitado + blindaje `opacity:1`) para que la selección nunca pueda quedar invisible (solo verde + sombra, sin badge/check extra); duraciones honestas `[Día completo, Fin de semana]` (se eliminó “Medio día” huérfano que daba 0 resultados); toggle-off en duración/estilo/compañía; estilo y compañía ahora sí filtran (`estilos[]`/`companias[]` por demo); botón “Limpiar filtros” como enlace sutil en cabecera y estado vacío (diseño previo restaurado; botón `db-find` sin flecha `→`); `db-find` sticky móvil con safe-area). Regresión en `src/Descubre.filtros.test.js` (6 tests: +reveal, +círculo, +acordeón móvil).
 - **Fix pantalla vacía tras buscar (2026-09-26, causa raíz):** el loader desmontaba hero/filtro/resultados y al remontar los nodos `data-reveal` quedaban sin `is-visible` (el observer de `App` no se re-ejecuta) → `opacity:0` permanente en navegador real. `Descubre` ahora re-sincroniza su reveal con efecto local en `[cargando]` (mismo observer/threshold). Cubierto por test reveal con `IntersectionObserver` simulado.
-- **Filtro móvil opción A + círculos (2026-09-27):** hero compacto móvil (320px, sin párrafo); `GrupoColapsable` **solo-móvil** (`plegable`, PC idéntico a antes) incluyendo intereses; barra sticky con resumen (`resumenFiltros`); filtro compacto en PC (menos padding, título 22px, choices 68px).
+- **Filtro móvil opción A + círculos (2026-09-27):** hero compacto móvil (320px, sin párrafo); `GrupoColapsable` **solo-móvil** (`plegable`, PC idéntico a antes) incluyendo intereses; barra `db-find-bar` **fija** abajo en móvil (`fixed` + `safe-area`, `.db-page` con `padding-bottom` compensado); filtro compacto en PC (menos padding, título 22px, choices 68px).
 - **Fix selección+móvil Descubre (2026-09-26):** la lógica React estaba bien (test temporal lo confirmó, luego eliminado); se reforzó lo visual: sombra en activos (el badge check naranja se retiró a petición), `focus-visible`, iconos con `flex:none/display:block`. Móvil ≤620px: minis con wrap (`flex:1 1 70px`, antes se desbordaban 4 en 360px), grupos apilados con divisor inferior, sort a ancho completo, meta/partner con wrap, featured-head con wrap, botón sticky con `safe-area`.
 
 - **`src/index.js`:** `createRoot(#root).render(<StrictMode><App/></StrictMode>)` + `import './styles/global/index.css'` + `reportWebVitals()` sin callback.
@@ -524,7 +524,7 @@ Tipografías: `Playfair Display` (títulos serif), `Montserrat` (cuerpo), `Cavea
 | `global/index.css`              | 1       | Solo comentario                                                                 |
 | `layout/Header.css`             | 285     | Header 86px fijo, brand, nav,`.active`, hamburguesa, `reserve-top`          |
 | `layout/Footer.css`             | 200     | Footer verde, brand/socials/links, bottom                                       |
-| `layout/WhatsAppButton.css`     | 117     | Botón flotante fixed 24px/z-1100, tooltip, pulse                               |
+| `layout/WhatsAppButton.css`     | 117+    | Botón flotante fixed/z-1100 (24px PC, 20px móvil), tooltip, pulse; sube solo con barra (`con-barra-detalle` 88px, `en-descubre` 150px) |
 | `inicio/Hero.css`               | 286     | Slider fullscreen, fade 900ms`.active/.exit`, overlay, dots, progress-bar     |
 | `inicio/Discover.css`           | 171     | Fondo crema, grid cards, icono circular                                         |
 | `inicio/Featured.css`           | 237     | Cards grid,`.featured-tag(.green/.blue)`, `.featured-media` fondo `#06452f` (2026-09-26, antes beige), precio, `small-btn`               |
@@ -630,7 +630,7 @@ flowchart TD
 
 ## 14. Tests
 
-`src/App.test.js` (RTL + jest-dom, `beforeEach: location.hash=''` + `src/Descubre.filtros.test.js` con 6 tests + `src/Reservar.test.js` con 5 tests; total 15 tests en verde):
+`src/App.test.js` (RTL + jest-dom, `beforeEach: location.hash=''` + `src/Descubre.filtros.test.js` con 6 tests + `src/Reservar.test.js` con 5 tests; total 16 tests en verde, incluye clase de body por vista para el botón flotante):
 
 | # | Acción                                        | Aserción                                                                                        |
 | - | ---------------------------------------------- | ------------------------------------------------------------------------------------------------ |

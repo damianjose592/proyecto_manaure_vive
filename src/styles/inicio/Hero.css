@@ -95,6 +95,7 @@
   left: auto;
   bottom: 110px;
   z-index: 7;
+  max-width: 320px;
   color: #fff;
   font-family: var(--font-script);
   font-size: clamp(26px, 2.8vw, 36px);
@@ -224,7 +225,18 @@
 
 /* ══════════════════
    RESPONSIVE (escala: 1024 / 768 / 560 / 380)
+   Slogan + contenido ajustados en la misma escala.
    ══════════════════ */
+@media (max-width: 1024px) {
+  .hero-slogan {
+    right: 5vw;
+    left: auto;
+    bottom: 100px;
+    max-width: 44vw;
+    font-size: 30px;
+  }
+}
+
 @media (max-width: 768px) {
   .hero {
     height: 100svh;
@@ -239,7 +251,10 @@
   .hero-slogan {
     right: 24px;
     left: auto;
-    bottom: 72px;
+    bottom: 76px;
+    max-width: 52vw;
+    font-size: 26px;
+    line-height: 0.9;
   }
 }
 
@@ -261,8 +276,11 @@
   .hero-slogan {
     right: 20px;
     left: auto;
-    bottom: 72px;
-    font-size: 26px;
+    bottom: 74px;
+    max-width: calc(100vw - 40px);
+    font-size: 23px;
+    line-height: 1;
+    transform: rotate(-8deg);
   }
   .hero-actions {
     flex-direction: column;
@@ -292,8 +310,11 @@
   }
   .hero-slogan {
     right: 16px;
-    bottom: 68px;
-    font-size: 22px;
+    bottom: 70px;
+    max-width: calc(100vw - 32px);
+    font-size: 20px;
+    line-height: 1;
+    transform: rotate(-7deg);
   }
   .hero-dots {
     bottom: 22px;

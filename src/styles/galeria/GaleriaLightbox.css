@@ -8,6 +8,8 @@
   padding: 24px;
   background: rgba(11, 18, 16, 0.82);
   backdrop-filter: blur(8px);
+  overscroll-behavior: contain;
+  touch-action: pan-y;
 }
 .galeria-close {
   position: absolute;

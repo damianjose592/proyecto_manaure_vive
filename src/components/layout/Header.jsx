@@ -1,6 +1,6 @@
 import '../../styles/layout/Header.css';
 
-function Header({ menuOpen, onMenuToggle, galeriaActiva, seccionActiva = 'inicio', onReservar }) {
+function Header({ menuOpen, onMenuToggle, galeriaActiva, seccionActiva = 'inicio' }) {
   const closeAll = () => {
     if (menuOpen) onMenuToggle();
   };
@@ -40,11 +40,11 @@ function Header({ menuOpen, onMenuToggle, galeriaActiva, seccionActiva = 'inicio
         <a className={galeriaActiva || isSectionActive('galeria') ? 'active' : ''} href="#galeria" onClick={closeAll}>Galería</a>
         <a className={isSectionActive('contacto') ? 'active' : ''} href="#contacto" onClick={closeAll}>Contacto</a>
         <a className={isSectionActive('convenios') ? 'active' : ''} href="#convenios" onClick={closeAll}>Convenios</a>
-        <button type="button" className="reserve-menu" onClick={() => { closeAll(); if (onReservar) onReservar(); }}>Reservar</button>
+        <a className="reserve-menu" href="#paquetes-todos" onClick={closeAll}>Reservar</a>
       </nav>
 
       <div className="header-actions">
-        <button type="button" className="reserve-top" onClick={() => { closeAll(); if (onReservar) onReservar(); }}>Reservar</button>
+        <a className="reserve-top" href="#paquetes-todos" onClick={closeAll}>Reservar</a>
       </div>
 
     </header>

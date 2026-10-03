@@ -45,4 +45,13 @@ test('returning from a package to experiences shows the landing content', async 
   fireEvent.click(screen.getAllByRole('link', { name: /^Experiencias$/i })[0]);
   expect(await screen.findByRole('heading', { name: /Descubre tu experiencia/i })).toBeInTheDocument();
 });
+
+test('marca el body segun la vista para la posicion del boton flotante', async () => {
+  render(<App />);
+  expect(document.body.className).not.toMatch(/con-barra-detalle/);
+
+  fireEvent.click(screen.getAllByRole('button', { name: /ver detalles/i })[0]);
+  await screen.findByRole('heading', { name: /Adrenalina Serrana/i }, { timeout: 3000 });
+  expect(document.body.className).toMatch(/con-barra-detalle/);
+});
  

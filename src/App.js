@@ -35,7 +35,6 @@ function App() {
   const [reservaActiva, setReservaActiva] = useState(() =>
     /^#reserva\//.test(window.location.hash)
   );
-  const [reservaModal, setReservaModal] = useState(false);
   const [favReserva, setFavReserva] = useState(false);
   const [seccionActiva, setSeccionActiva] = useState(() => {
     const hash = window.location.hash.replace('#', '').trim();
@@ -88,6 +87,7 @@ function App() {
   const enGaleriaRef = useRef(vistaGaleria);
   const posInicioGaleria = useRef(0);
   const anclaPendiente = useRef(null);
+  const aperturaDesdePreview = useRef(false);
   enGaleriaRef.current = vistaGaleria;
 
   useEffect(() => {
@@ -114,10 +114,16 @@ function App() {
       if (esGaleria || esPaquetesTodos || esDescubre || esPaquete) {
         if (!enGaleriaRef.current) posInicioGaleria.current = window.scrollY;
         anclaPendiente.current = null;
-      } else {
-        anclaPendiente.current = window.location.hash.replace('#', '') || null;
+      } else {        anclaPendiente.current = window.location.hash.replace('#', '') || null;
       }
       setVistaGaleria(esGaleria);
+      if (esGaleria) {
+        if (aperturaDesdePreview.current) {
+          aperturaDesdePreview.current = false;
+        } else {
+          setIndiceGaleriaSeleccionada(null);
+        }
+      }
       setVistaPaquetes(esPaquetesTodos);
       setVistaDescubre(esDescubre);
       desplazarSegunHash();
@@ -160,17 +166,13 @@ function App() {
   }, [vistaGaleria, vistaPaquetes, vistaDescubre, paqueteSeleccionado, reservaActiva]);
 
   useEffect(() => {
-    if (!reservaModal) return;
-    document.body.style.overflow = 'hidden';
-    const alTeclar = e => {
-      if (e.key === 'Escape') setReservaModal(false);
-    };
-    window.addEventListener('keydown', alTeclar);
+    document.body.classList.toggle('con-barra-detalle', Boolean(paqueteSeleccionado && !reservaActiva));
+    document.body.classList.toggle('en-descubre', vistaDescubre);
     return () => {
-      document.body.style.overflow = '';
-      window.removeEventListener('keydown', alTeclar);
+      document.body.classList.remove('con-barra-detalle');
+      document.body.classList.remove('en-descubre');
     };
-  }, [reservaModal]);
+  }, [paqueteSeleccionado, reservaActiva, vistaDescubre]);
 
   useEffect(() => {
     try {
@@ -190,7 +192,6 @@ function App() {
           onMenuToggle={() => setMenuOpen(o => !o)}
           galeriaActiva={vistaGaleria}
           seccionActiva={seccionActiva}
-          onReservar={() => setReservaModal(true)}
         />
       )}
       {enReserva ? (
@@ -233,7 +234,7 @@ function App() {
         />
       ) : vistaGaleria ? (
         <main key="galeria" ref={scrollRevealRef}>
-          <GaleriaCompleta indiceInicial={indiceGaleriaSeleccionada} />
+          <GaleriaCompleta key={indiceGaleriaSeleccionada ?? 'todas'} indiceInicial={indiceGaleriaSeleccionada} />
           <CTA />
         </main>
       ) : vistaPaquetes ? (
@@ -259,6 +260,7 @@ function App() {
             }}
           />
           <Gallery onAbrirFoto={indice => {
+            aperturaDesdePreview.current = true;
             setIndiceGaleriaSeleccionada(indice);
             window.location.hash = '#galeria';
           }} />
@@ -269,19 +271,6 @@ function App() {
       )}
       <Footer />
       <WhatsAppButton />
-      {reservaModal && (
-        <div className="reserva-modal-backdrop" onClick={() => setReservaModal(false)}>
-          <div
-            className="reserva-modal"
-            onClick={e => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            aria-label="Reservar experiencia"
-          >
-            <ReservarExperiencia paqueteInicial={null} onCerrar={() => setReservaModal(false)} etiquetaVolver="Cerrar" />
-          </div>
-        </div>
-      )}
     </>
   );
 }

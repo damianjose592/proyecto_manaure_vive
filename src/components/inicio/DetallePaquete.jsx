@@ -64,6 +64,11 @@ function DetallePaquete({ paquete, onReservar }) {
 
   useEffect(() => {
     if (visor === null) return;
+    const y = window.scrollY;
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${y}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
     document.body.style.overflow = 'hidden';
     const alTeclar = e => {
       if (e.key === 'Escape') setVisor(null);
@@ -72,7 +77,12 @@ function DetallePaquete({ paquete, onReservar }) {
     };
     window.addEventListener('keydown', alTeclar);
     return () => {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
       document.body.style.overflow = '';
+      window.scrollTo(0, y);
       window.removeEventListener('keydown', alTeclar);
     };
   });

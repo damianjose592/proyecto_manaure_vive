@@ -906,10 +906,15 @@ body.db-cargando-pagina .db-cargando-full {
   .db-skeletons {
     grid-template-columns: 1fr;
   }
+  .db-page {
+    padding-bottom: calc(150px + env(safe-area-inset-bottom));
+  }
   .db-find-bar {
-    position: sticky;
+    position: fixed;
+    left: 12px;
+    right: 12px;
     bottom: calc(12px + env(safe-area-inset-bottom));
-    z-index: 20;
+    z-index: 800;
     background: rgba(255, 253, 248, 0.97);
     border: 1px solid #e7e0d2;
     border-radius: 16px;

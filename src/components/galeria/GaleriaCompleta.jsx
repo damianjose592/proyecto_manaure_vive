@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import '../../styles/galeria/GaleriaCompleta.css';
 import { FILTROS_GALERIA, COLORES_CATEGORIA, useGaleria } from '../../utils/inicio/Galeria.utils';
@@ -16,11 +16,46 @@ function IconoFiltro({ icono }) {
 function GaleriaCompleta({ indiceInicial = null }) {
   const { filtroActivo, setFiltroActivo, fotosFiltradas } = useGaleria();
   const [seleccionada, setSeleccionada] = useState(indiceInicial);
+  const [filtroAbierto, setFiltroAbierto] = useState(false);
+  const filtroRef = useRef(null);
 
   const cambiarFiltro = filtro => {
     setSeleccionada(null);
     setFiltroActivo(filtro);
   };
+
+  const elegirFiltro = filtro => {
+    cambiarFiltro(filtro);
+    setFiltroAbierto(false);
+  };
+
+  // Al entrar a la galería: siempre arranca en "Todas" y sin foto abierta,
+  // salvo que se venga del preview (indiceInicial).
+  useEffect(() => {
+    setFiltroActivo('Todas');
+    setSeleccionada(indiceInicial ?? null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    setSeleccionada(indiceInicial ?? null);
+  }, [indiceInicial]);
+
+  useEffect(() => {
+    if (!filtroAbierto) return undefined;
+    const alClickFuera = evento => {
+      if (filtroRef.current && !filtroRef.current.contains(evento.target)) setFiltroAbierto(false);
+    };
+    const alTecla = evento => {
+      if (evento.key === 'Escape') setFiltroAbierto(false);
+    };
+    document.addEventListener('mousedown', alClickFuera);
+    document.addEventListener('keydown', alTecla);
+    return () => {
+      document.removeEventListener('mousedown', alClickFuera);
+      document.removeEventListener('keydown', alTecla);
+    };
+  }, [filtroAbierto]);
 
   const cerrar = useCallback(() => setSeleccionada(null), []);
   const avanzar = useCallback(
@@ -42,10 +77,20 @@ function GaleriaCompleta({ indiceInicial = null }) {
       if (evento.key === 'ArrowLeft') avanzar(-1);
     };
     window.addEventListener('keydown', alTeclado);
+    const y = window.scrollY;
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${y}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
     document.body.style.overflow = 'hidden';
     return () => {
       window.removeEventListener('keydown', alTeclado);
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
       document.body.style.overflow = '';
+      window.scrollTo(0, y);
     };
   }, [seleccionada, cerrar, avanzar]);
 
@@ -86,8 +131,7 @@ function GaleriaCompleta({ indiceInicial = null }) {
         <div className="galeria-head-actions">
           <span className="galeria-meta">COLOMBIA • {totalFotos} FOTOS</span>
           <p className="galeria-note">
-            Naturaleza, cultura,<br />
-            gastronomía y experiencias <br />
+            Naturaleza, cultura, gastronomía y experiencias{' '}
             <span className="galeria-note-highlight">en un solo lugar</span>
           </p>
         </div>
@@ -107,6 +151,47 @@ function GaleriaCompleta({ indiceInicial = null }) {
             {filtro.nombre}
           </button>
         ))}
+      </div>
+
+      <div className="galeria-filter-single" data-reveal="content" ref={filtroRef}>
+        <span className="galeria-filter-label" id="filtro-galeria-label">
+          Filtrar por
+        </span>
+        <button
+          type="button"
+          id="filtro-galeria-btn"
+          className="galeria-select"
+          aria-haspopup="listbox"
+          aria-expanded={filtroAbierto}
+          aria-labelledby="filtro-galeria-label filtro-galeria-btn"
+          onClick={() => setFiltroAbierto(abierto => !abierto)}
+        >
+          <span>{filtroActivo}</span>
+          <span aria-hidden="true" className="galeria-select-arrow">▾</span>
+        </button>
+        {filtroAbierto && (
+          <ul className="galeria-options" role="listbox" aria-labelledby="filtro-galeria-label">
+            {FILTROS_GALERIA.map(filtro => (
+              <li
+                key={filtro.nombre}
+                role="option"
+                aria-selected={filtroActivo === filtro.nombre}
+                tabIndex={0}
+                className={`galeria-option${filtroActivo === filtro.nombre ? ' selected' : ''}`}
+                onClick={() => elegirFiltro(filtro.nombre)}
+                onKeyDown={evento => {
+                  if (evento.key === 'Enter' || evento.key === ' ') {
+                    evento.preventDefault();
+                    elegirFiltro(filtro.nombre);
+                  }
+                }}
+              >
+                {filtro.nombre}
+                {filtroActivo === filtro.nombre && <span aria-hidden="true"> ✓</span>}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       <div className="galeria-grid" data-reveal="content">

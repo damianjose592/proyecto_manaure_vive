@@ -172,7 +172,6 @@ function Descubre() {
   const [compania, setCompania] = useState(null);
   const [duracion, setDuracion] = useState(null);
   const [orden, setOrden] = useState('relevancia');
-  const [aplicados, setAplicados] = useState(null);
   const [cargando, setCargando] = useState(false);
   const temporizador = useRef(null);
 
@@ -226,7 +225,6 @@ function Descubre() {
 
   const buscar = () => {
     if (temporizador.current) clearTimeout(temporizador.current);
-    setAplicados({ intereses: new Set(intereses), duracion, estilo, compania });
     setCargando(true);
     window.scrollTo(0, 0);
     temporizador.current = setTimeout(() => {
@@ -241,7 +239,6 @@ function Descubre() {
     setEstilo(null);
     setCompania(null);
     setDuracion(null);
-    setAplicados(null);
     setOrden('relevancia');
   };
 
@@ -278,9 +275,9 @@ function Descubre() {
 
   const precioNumero = texto => Number(String(texto).replace(/[^0-9]/g, '')) || 0;
 
-  const base = aplicados
-    ? PAQUETES_DEMO.filter(p => coincide(p, aplicados.intereses, aplicados.duracion, aplicados.estilo, aplicados.compania))
-    : PAQUETES_DEMO;
+  // Resultados en vivo: a medida que se selecciona un filtro
+  // aparecen las similitudes de paquetes, sin esperar a "Ver paquetes".
+  const base = PAQUETES_DEMO.filter(p => coincide(p, intereses, duracion, estilo, compania));
 
   const paquetesOrdenados = [...base].sort((a, b) => {
     if (orden === 'precio-asc') return precioNumero(a.precio) - precioNumero(b.precio);

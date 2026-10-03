@@ -1,15 +1,45 @@
-@media (max-width: 900px) {
+/* ══════════════════
+   GALERIA RESPONSIVE (escala unificada: 1024 / 768 / 560 / 380)
+   Plan A rev.2: head en stack + filtro único (select) en móvil.
+   ══════════════════ */
+@media (max-width: 1024px) {
   .galeria-head {
+    gap: 20px;
+  }
+  .galeria-head .galeria-note {
+    font-size: 23px;
+  }
+}
+
+@media (max-width: 768px) {
+  .galeria {
+    padding: 120px var(--page-side-padding) 44px;
+  }
+  .galeria-head {
+    display: flex;
     flex-direction: column;
     align-items: flex-start;
+    gap: 16px;
+  }
+  .galeria-intro {
+    max-width: 100%;
   }
   .galeria-head-actions {
     width: 100%;
-    flex: 0 0 auto;
-    align-items: center;
+    align-items: flex-start;
+    text-align: left;
   }
-  .galeria-note {
-    text-align: center;
+  .galeria-head > div {
+    text-align: left;
+  }
+  .galeria-meta {
+    letter-spacing: 0.12em;
+  }
+  .galeria-head .galeria-note {
+    max-width: 420px;
+    text-align: left;
+    font-size: 20px;
+    transform: none;
   }
   .galeria-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -30,44 +60,48 @@
     padding: 104px 18px 40px;
   }
   .galeria-head {
-    flex-direction: row;
+    display: flex;
+    flex-direction: column;
     align-items: flex-start;
     gap: 12px;
+    margin-bottom: 20px;
   }
   .galeria-head > div:first-child {
-    flex: 1 1 0;
     min-width: 0;
   }
   .galeria-head-actions {
-    flex: 0 0 clamp(118px, 38vw, 150px);
-    width: auto;
+    width: 100%;
+    align-items: flex-start;
+    text-align: left;
   }
   .galeria-head .galeria-note {
     max-width: 100%;
-    margin: 6px 0 0;
-    font-size: clamp(17px, 5vw, 22px);
+    margin: 6px 28px 0 0;
+    text-align: left;
+    font-size: 20px;
+    line-height: 1.15;
+    transform: none;
   }
+  /* curva sobre .galeria-note: nace en la N también en móvil */
+  .galeria-note::after {
+    left: 0;
+    right: -17px;
+  }
+  .galeria-note::before {
+    left: 21px;
+    right: -11px;
+  }
+  /* Filtro único en móvil: oculta pills, muestra el select */
   .galeria-filters {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
+    display: none;
   }
-  .galeria-filter {
-    width: min(100%, 145px);
-    justify-content: center;
-    min-width: 0;
-    justify-self: center;
-    padding: 8px 12px;
-    font-size: clamp(10px, 2.8vw, 12px);
-  }
-  .galeria-filter:last-child {
-    grid-column: 1 / -1;
-    width: min(50%, 145px);
-    justify-self: center;
+  .galeria-filter-single {
+    display: block;
   }
   .galeria-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-auto-rows: 170px;
+    gap: 12px;
   }
   .galeria-item.featured {
     grid-column: span 2;
@@ -87,11 +121,16 @@
 }
 
 @media (max-width: 380px) {
-  .galeria-head {
-    flex-direction: column;
+  .galeria {
+    padding: 100px 16px 32px;
   }
-  .galeria-head-actions {
-    width: 100%;
-    flex-basis: auto;
+  .galeria-head h2 {
+    font-size: 32px;
+  }
+  .galeria-head .galeria-note {
+    font-size: 19px;
+  }
+  .galeria-grid {
+    grid-auto-rows: 160px;
   }
 }

@@ -95,9 +95,17 @@
 @media (max-width: 600px) {
   .whatsapp-floating-button {
     right: 16px;
-    bottom: 76px;
+    bottom: 20px;
     width: 54px;
     height: 54px;
+  }
+
+  body.con-barra-detalle .whatsapp-floating-button {
+    bottom: 88px;
+  }
+
+  body.en-descubre .whatsapp-floating-button {
+    bottom: 150px;
   }
 
   .whatsapp-icon {
