@@ -35,7 +35,7 @@ function Header({ menuOpen, onMenuToggle, galeriaActiva, seccionActiva = 'inicio
       {/* NAV CENTRAL */}
       <nav id="site-navigation" className={`nav${menuOpen ? ' open' : ''}`}>
         <a className={galeriaActiva ? '' : isSectionActive('inicio') ? 'active' : ''} href="#inicio" onClick={closeAll}>Inicio</a>
-        <a className={isSectionActive('experiencias') ? 'active' : ''} href="#descubre" onClick={closeAll}>Experiencias</a>
+        <a className={isSectionActive('experiencias') ? 'active' : ''} href="#experiencias" onClick={closeAll}>Experiencias</a>
         <a className={isSectionActive('paquetes') ? 'active' : ''} href="#paquetes-todos" onClick={closeAll}>Paquetes</a>
         <a className={galeriaActiva || isSectionActive('galeria') ? 'active' : ''} href="#galeria" onClick={closeAll}>Galería</a>
         <a className={isSectionActive('contacto') ? 'active' : ''} href="#contacto" onClick={closeAll}>Contacto</a>

@@ -1,7 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../../styles/inicio/Descubre.css';
-
-const HERO_IMG = `${process.env.PUBLIC_URL}/assets/galeria/Naturaleza/Metallura/naturaleza2.jpeg`;
 
 const INTERESES = [
   { id: 'naturaleza', etiqueta: 'Naturaleza', icon: (<svg viewBox="0 0 24 24"><path d="M4 20c9-1 15-7 16-16-9 1-15 7-16 16z" /><path d="M4 20c3-7 8-11 13-14" /></svg>) },
@@ -12,24 +10,6 @@ const INTERESES = [
   { id: 'romance', etiqueta: 'Romance', icon: (<svg viewBox="0 0 24 24"><path d="M12 20.5s-8-5-8-11.2A4.8 4.8 0 0 1 12 6.8a4.8 4.8 0 0 1 8 2.5c0 6.2-8 11.2-8 11.2z" /></svg>) },
   { id: 'deportes', etiqueta: 'Deportes', icon: (<svg viewBox="0 0 24 24"><circle cx="14.5" cy="4.5" r="1.6" fill="currentColor" stroke="none" /><path d="M6 21l3.5-5 2.5 2 3-6M9 16l-2.5-3.5L11 10l2 2.5 5-1.5" /></svg>) },
   { id: 'relajacion', etiqueta: 'Relajaci\u00f3n', icon: (<svg viewBox="0 0 24 24"><path d="M12 21c-4-1-7-4-7-8 3 0 5.5 1.5 7 4 1.5-2.5 4-4 7-4 0 4-3 7-7 8z" /><path d="M12 21c-2.5-2-3-4.5-3-7 2 0 3.2 1 3 3 -.2-2 1-3 3-3 0 2.5-.5 5-3 7z" /></svg>) },
-];
-
-const ESTILOS = [
-  { id: 'relajada', etiqueta: 'Relajada', icon: (<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2" /><path d="M12 2.5v2.5M12 19v2.5M4.5 12H2M22 12h-2.5M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M18.4 5.6l-1.8 1.8M7.4 16.6l-1.8 1.8" /></svg>) },
-  { id: 'exploradora', etiqueta: 'Exploradora', icon: (<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5" /><path d="M15.5 8.5l-2 5-5 2 2-5z" /></svg>) },
-  { id: 'adrenalina', etiqueta: 'Adrenalina', icon: (<svg viewBox="0 0 24 24"><path d="M12 2c1 3-2 4-2 7a3 3 0 0 0 6 0c0-1-.5-2-1-2 1 4-1 5-1 5-1-2 1-3-1-6-1 2-3 3-3 6a4 4 0 0 0 8 0c0-5-4-6-6-10z" /></svg>) },
-];
-
-const COMPANIAS = [
-  { id: 'pareja', etiqueta: 'Pareja', icon: (<svg viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.7-7.5-10.3A4.4 4.4 0 0 1 12 6.9a4.4 4.4 0 0 1 7.5 3.3c0 5.6-7.5 10.3-7.5 10.3z" /></svg>) },
-  { id: 'familia', etiqueta: 'Familia', icon: (<svg viewBox="0 0 24 24"><circle cx="8" cy="7" r="2.3" /><circle cx="16.3" cy="7.8" r="1.9" /><path d="M3 20v-2.5A4 4 0 0 1 7 13.5h2a4 4 0 0 1 4 4V20" /><path d="M13.5 14.5a3.2 3.2 0 0 1 3-1.2 3.2 3.2 0 0 1 3.5 3.2V20" /></svg>) },
-  { id: 'amigos', etiqueta: 'Amigos', icon: (<svg viewBox="0 0 24 24"><circle cx="8.5" cy="8" r="2.6" /><circle cx="16" cy="8.5" r="2.2" /><path d="M3 20v-2.2a4.4 4.4 0 0 1 4.4-4.4h2.2a4.4 4.4 0 0 1 4.4 4.4V20" /><path d="M15 13.6a3.6 3.6 0 0 1 3.4-1 3.6 3.6 0 0 1 2.6 3.4V20" /></svg>) },
-  { id: 'solo', etiqueta: 'Solo', icon: (<svg viewBox="0 0 24 24"><circle cx="12" cy="7.5" r="3" /><path d="M5 20v-2.5a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5V20" /></svg>) },
-];
-
-const DURACIONES = [
-  { id: 'completo', etiqueta: 'D\u00eda completo', icon: (<svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16" rx="2" /><path d="M3 9.5h18M8 2.5v4M16 2.5v4" /></svg>) },
-  { id: 'finde', etiqueta: 'Fin de semana', icon: (<svg viewBox="0 0 24 24"><path d="M19 13.5A8 8 0 1 1 10.5 5a6.3 6.3 0 0 0 8.5 8.5z" /></svg>) },
 ];
 
 const ICONO_RELOJ = (<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3.5 2" /></svg>);
@@ -168,27 +148,9 @@ function GrupoColapsable({ id, abierto, onCambiar, titulo, subtitulo, children, 
 
 function Descubre() {
   const [intereses, setIntereses] = useState(() => new Set());
-  const [estilo, setEstilo] = useState(null);
-  const [compania, setCompania] = useState(null);
-  const [duracion, setDuracion] = useState(null);
   const [orden, setOrden] = useState('relevancia');
-  const [cargando, setCargando] = useState(false);
-  const temporizador = useRef(null);
-
-  useEffect(() => () => {
-    if (temporizador.current) clearTimeout(temporizador.current);
-  }, []);
 
   useEffect(() => {
-    if (!cargando) return;
-    document.body.classList.add('db-cargando-pagina');
-    return () => {
-      document.body.classList.remove('db-cargando-pagina');
-    };
-  }, [cargando]);
-
-  useEffect(() => {
-    if (cargando) return undefined;
     const elementos = Array.from(document.querySelectorAll('.db-page [data-reveal]:not(.is-visible)'));
     if (elementos.length === 0) return undefined;
     if (!('IntersectionObserver' in window)) {
@@ -204,7 +166,7 @@ function Descubre() {
     }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
     elementos.forEach(elemento => observador.observe(elemento));
     return () => observador.disconnect();
-  }, [cargando]);
+  }, []);
 
   const alternarInteres = id => {
     setIntereses(prev => {
@@ -215,69 +177,33 @@ function Descubre() {
     });
   };
 
-  const coincide = (p, ints, dur, est, comp) =>
-    (ints.size === 0 || p.intereses.some(id => ints.has(id)))
-    && (dur === null || p.duracionId === dur)
-    && (est === null || (p.estilos || []).includes(est))
-    && (comp === null || (p.companias || []).includes(comp));
-
-  const conteoBorrador = PAQUETES_DEMO.filter(p => coincide(p, intereses, duracion, estilo, compania)).length;
-
-  const buscar = () => {
-    if (temporizador.current) clearTimeout(temporizador.current);
-    setCargando(true);
-    window.scrollTo(0, 0);
-    temporizador.current = setTimeout(() => {
-      setCargando(false);
-      temporizador.current = null;
-    }, 1400);
-  };
+  const coincide = (p, ints) => ints.size === 0 || p.intereses.some(id => ints.has(id));
 
   const limpiar = () => {
-    if (temporizador.current) clearTimeout(temporizador.current);
     setIntereses(new Set());
-    setEstilo(null);
-    setCompania(null);
-    setDuracion(null);
     setOrden('relevancia');
   };
-
-  const alternarOpcion = (actual, id, fijar) => fijar(actual === id ? null : id);
 
   const esMovil = useEsMovil();
   const [grupos, setGrupos] = useState(null);
   const grupoAbierto = id => (grupos ? grupos.has(id) : !esMovil);
   const alternarGrupo = (id, abierto) => {
     setGrupos(prev => {
-      const base = prev ? new Set(prev) : new Set(!esMovil ? ['estilo', 'compania', 'duracion'] : []);
+      const base = prev ? new Set(prev) : new Set(!esMovil ? ['intereses'] : []);
       if (abierto) base.add(id);
       else base.delete(id);
       return base;
     });
   };
 
-  const nombreSel = (lista, id) => {
-    const hallado = lista.find(x => x.id === id);
-    return hallado ? hallado.etiqueta : null;
-  };
-  const etiquetasElegidas = [
-    ...INTERESES.filter(i => intereses.has(i.id)).map(i => i.etiqueta),
-    nombreSel(ESTILOS, estilo),
-    nombreSel(COMPANIAS, compania),
-    nombreSel(DURACIONES, duracion),
-  ].filter(Boolean);
-  const totalElegidos = etiquetasElegidas.length;
-  const resumenFiltros = totalElegidos === 0
-    ? ''
-    : totalElegidos <= 2
-      ? etiquetasElegidas.join(' \u00b7 ')
-      : `${etiquetasElegidas.slice(0, 2).join(' \u00b7 ')} +${totalElegidos - 2}`;
-
   const precioNumero = texto => Number(String(texto).replace(/[^0-9]/g, '')) || 0;
 
   // Resultados en vivo: a medida que se selecciona un filtro
-  // aparecen las similitudes de paquetes, sin esperar a "Ver paquetes".
-  const base = PAQUETES_DEMO.filter(p => coincide(p, intereses, duracion, estilo, compania));
+  // aparecen las similitudes de paquetes.
+  const base = PAQUETES_DEMO.filter(p => coincide(p, intereses));
+
+  // Huella de la selección: remonta las tarjetas para re-animarlas al filtrar.
+  const huellaSeleccion = [...intereses].sort().join('|');
 
   const paquetesOrdenados = [...base].sort((a, b) => {
     if (orden === 'precio-asc') return precioNumero(a.precio) - precioNumero(b.precio);
@@ -287,35 +213,7 @@ function Descubre() {
   });
 
   return (
-    <main className="db-page">
-      {cargando ? (
-        <>
-          <div className="db-cargando-full">
-            <div className="db-spinner" aria-hidden="true" />
-            <p>Cargando similitudes de paquetes...</p>
-            <small>Buscando los planes que m&aacute;s se parecen a lo que elegiste</small>
-            <div className="db-carga-barra" aria-hidden="true"><span /></div>
-          </div>
-          <div className="db-resultados">
-            <div className="db-skeletons" aria-hidden="true">
-              <div className="db-skel" />
-              <div className="db-skel" />
-              <div className="db-skel" />
-            </div>
-          </div>
-        </>
-      ) : (
-        <>
-      {/* volver integrado en el hero */}
-      <section className="db-hero" data-reveal="section" style={{ backgroundImage: `linear-gradient(90deg, rgba(6,69,47,.85), rgba(6,69,47,.25)), url("${HERO_IMG}")` }}>
-        <div className="db-hero-content" data-reveal="heading">
-          <a className="db-volver-hero" href="#experiencias">&larr; Volver a experiencias</a>
-          <span className="db-eyebrow">EXPERIENCIAS PERSONALIZADAS</span>
-          <h1>Descubre la experiencia<br />que va contigo</h1>
-          <p>Cu&eacute;ntanos qu&eacute; te gusta, c&oacute;mo te gustar&iacute;a vivirlo y te mostraremos los paquetes que mejor se ajustan a ti.</p>
-        </div>
-      </section>
-
+    <section className="db-page" id="descubre" data-reveal="section">
       <section className="db-filter-wrap" data-reveal="section">
         <div className="db-filter" data-reveal="content">
           <div className="db-filter-head">
@@ -365,84 +263,6 @@ function Descubre() {
             </div>
           )}
 
-          <div className="db-subfilters">
-            <GrupoColapsable
-              id="estilo"
-              plegable={esMovil}
-              abierto={grupoAbierto('estilo')}
-              onCambiar={alternarGrupo}
-              titulo={<>2. &iquest;C&oacute;mo quieres vivirla?</>}
-              subtitulo="Elige el estilo de experiencia"
-            >
-              <div className="db-mini-options">
-                {ESTILOS.map(item => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    className={`db-mini${estilo === item.id ? ' active' : ''}`}
-                    onClick={() => alternarOpcion(estilo, item.id, setEstilo)}
-                    aria-pressed={estilo === item.id}
-                  >
-                    <span className="db-mini-icon">{item.icon}</span>
-                    {item.etiqueta}
-                  </button>
-                ))}
-              </div>
-            </GrupoColapsable>
-
-            <GrupoColapsable
-              id="compania"
-              plegable={esMovil}
-              abierto={grupoAbierto('compania')}
-              onCambiar={alternarGrupo}
-              titulo={<>3. &iquest;Con qui&eacute;n vienes?</>}
-              subtitulo={<>Selecciona la compa&ntilde;&iacute;a</>}
-            >
-              <div className="db-mini-options">
-                {COMPANIAS.map(item => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    className={`db-mini${compania === item.id ? ' active' : ''}`}
-                    onClick={() => alternarOpcion(compania, item.id, setCompania)}
-                    aria-pressed={compania === item.id}
-                  >
-                    <span className="db-mini-icon">{item.icon}</span>
-                    {item.etiqueta}
-                  </button>
-                ))}
-              </div>
-            </GrupoColapsable>
-
-            <GrupoColapsable
-              id="duracion"
-              plegable={esMovil}
-              abierto={grupoAbierto('duracion')}
-              onCambiar={alternarGrupo}
-              titulo={<>4. &iquest;Cu&aacute;nto tiempo tienes?</>}
-              subtitulo={<>Elige la duraci&oacute;n</>}
-            >
-              <div className="db-mini-options">
-                {DURACIONES.map(item => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    className={`db-mini${duracion === item.id ? ' active' : ''}`}
-                    onClick={() => alternarOpcion(duracion, item.id, setDuracion)}
-                    aria-pressed={duracion === item.id}
-                  >
-                    <span className="db-mini-icon">{item.icon}</span>
-                    {item.etiqueta}
-                  </button>
-                ))}
-              </div>
-            </GrupoColapsable>
-
-            <div className="db-find-bar">
-              {resumenFiltros !== '' && <span className="db-find-resumen">{resumenFiltros}</span>}
-              <button type="button" className="db-find" onClick={buscar}>Ver paquetes <span className="db-find-num">{conteoBorrador}</span></button>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -463,7 +283,7 @@ function Descubre() {
           </div>
         </div>
 
-        <div className="db-cards">
+        <div className="db-cards" key={huellaSeleccion}>
           {base.length === 0 && (
             <div className="db-vacio">
               <p>No hay paquetes para esa combinaci&oacute;n. Prueba con otros intereses.</p>
@@ -519,9 +339,7 @@ function Descubre() {
           </div>
         </section>
       </section>
-        </>
-      )}
-    </main>
+    </section>
   );
 }
 

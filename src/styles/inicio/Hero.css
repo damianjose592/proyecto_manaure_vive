@@ -276,11 +276,14 @@
   .hero-slogan {
     right: 20px;
     left: auto;
-    bottom: 74px;
+    bottom: 66px;
     max-width: calc(100vw - 40px);
     font-size: 23px;
-    line-height: 1;
+    line-height: 0.95;
     transform: rotate(-8deg);
+  }
+  .hero-slogan b {
+    padding-bottom: 10px;
   }
   .hero-actions {
     flex-direction: column;
@@ -310,10 +313,10 @@
   }
   .hero-slogan {
     right: 16px;
-    bottom: 70px;
+    bottom: 62px;
     max-width: calc(100vw - 32px);
     font-size: 20px;
-    line-height: 1;
+    line-height: 0.9;
     transform: rotate(-7deg);
   }
   .hero-dots {

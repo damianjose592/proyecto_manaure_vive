@@ -538,6 +538,31 @@ body.db-cargando-pagina .db-cargando-full {
   box-shadow: 0 15px 30px rgba(30, 50, 40, 0.11);
 }
 
+/* Entrada al filtrar: se re-dispara porque .db-cards cambia de key */
+.db-card {
+  animation: db-card-entrada 0.45s ease both;
+}
+.db-cards > article:nth-child(2) { animation-delay: 0.06s; }
+.db-cards > article:nth-child(3) { animation-delay: 0.12s; }
+.db-cards > article:nth-child(4) { animation-delay: 0.18s; }
+.db-cards > article:nth-child(5) { animation-delay: 0.22s; }
+.db-cards > article:nth-child(n + 6) { animation-delay: 0.26s; }
+@keyframes db-card-entrada {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .db-card {
+    animation: none;
+  }
+}
+
 .db-card-img {
   height: 150px;
   position: relative;

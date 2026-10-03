@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import '../../styles/inicio/DetallePaquete.css';
 import '../../styles/inicio/Descubre.css';
 import { conveniosEcoturismo, paquetesEcoturismo } from '../../utils/inicio/Ecoturismo.utils';
+import { COMPANIAS, DURACIONES, ESTILOS } from '../../utils/inicio/Preferencias.utils';
+import { PAQUETES_DEMO } from './Descubre';
 
 const RECOMENDACIONES = [
   'Calzado c\u00f3modo para caminar',
@@ -17,6 +19,14 @@ const NO_INCLUYE_GENERICO = [
 ];
 
 const WHATSAPP_NUMERO = '573012706114';
+
+// Ficha informativa para paquetes sin demo en Descubre (solo lectura, no filtra).
+const FICHA_FALLBACK = {
+  4: { estilos: ['relajada'], companias: ['familia'], duracionId: 'completo' },
+  7: { estilos: ['adrenalina', 'exploradora'], companias: ['amigos'], duracionId: 'completo' },
+  8: { estilos: ['relajada'], companias: ['pareja'], duracionId: 'finde' },
+  9: { estilos: ['relajada', 'exploradora', 'adrenalina'], companias: ['pareja', 'familia', 'amigos', 'solo'], duracionId: null },
+};
 
 function parsePrecio(precio) {
   if (!precio) return null;
@@ -41,6 +51,12 @@ function DetallePaquete({ paquete, onReservar }) {
   const tienePrecio = precioAdulto !== null;
   const fotos = paquete.galeria && paquete.galeria.length > 0 ? paquete.galeria : [paquete.imagen];
   const listaSocios = paquete.socios && paquete.socios.length > 0 ? paquete.socios : [paquete.socio];
+  const indicePaquete = paquetesEcoturismo.indexOf(paquete);
+  const demoFicha = PAQUETES_DEMO.find(d => d.paquete === indicePaquete);
+  const fichaFallback = FICHA_FALLBACK[indicePaquete] || { estilos: [], companias: [], duracionId: null };
+  const fichaEstilos = (demoFicha && demoFicha.estilos) || fichaFallback.estilos;
+  const fichaCompanias = (demoFicha && demoFicha.companias) || fichaFallback.companias;
+  const fichaDuracionId = (demoFicha && demoFicha.duracionId) || fichaFallback.duracionId;
 
   const [fecha, setFecha] = useState(hoyISO());
   const [adultos, setAdultos] = useState(1);
@@ -366,6 +382,50 @@ function DetallePaquete({ paquete, onReservar }) {
               </div>
             </section>
 
+            <section className="detalle-bloque detalle-ficha">
+              <span className="eyebrow">FICHA DEL PLAN</span>
+              <h2>Así se vive esta experiencia</h2>
+              <p className="detalle-ficha-sub">Lo que este paquete trae por naturaleza: estilo, compañía ideal y duración.</p>
+              <div className="detalle-ficha-grupo">
+                <h3>¿Cómo se vive?</h3>
+                <div className="db-mini-options">
+                  {ESTILOS.map(item => (
+                    <span key={item.id} className={`db-mini${fichaEstilos.includes(item.id) ? ' active' : ''}`} aria-label={`${item.etiqueta}${fichaEstilos.includes(item.id) ? ' (aplica a este paquete)' : ''}`}>
+                      <span className="db-mini-icon">{item.icon}</span>
+                      {item.etiqueta}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="detalle-ficha-grupo">
+                <h3>¿Con quién se disfruta?</h3>
+                <div className="db-mini-options">
+                  {COMPANIAS.map(item => (
+                    <span key={item.id} className={`db-mini${fichaCompanias.includes(item.id) ? ' active' : ''}`} aria-label={`${item.etiqueta}${fichaCompanias.includes(item.id) ? ' (aplica a este paquete)' : ''}`}>
+                      <span className="db-mini-icon">{item.icon}</span>
+                      {item.etiqueta}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="detalle-ficha-grupo">
+                <h3>¿Cuánto dura?</h3>
+                <div className="db-mini-options">
+                  {DURACIONES.map(item => (
+                    <span key={item.id} className={`db-mini${fichaDuracionId === item.id ? ' active' : ''}`} aria-label={`${item.etiqueta}${fichaDuracionId === item.id ? ' (aplica a este paquete)' : ''}`}>
+                      <span className="db-mini-icon">{item.icon}</span>
+                      {item.etiqueta}
+                    </span>
+                  ))}
+                  {!fichaDuracionId && (
+                    <span className="db-mini active" aria-label={`${paquete.duracion} (aplica a este paquete)`}>
+                      {paquete.duracion}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </section>
+
             <section className="detalle-bloque">
               <h2>Recomendaciones para el d&iacute;a</h2>
               <div className="detalle-reco-grid">
@@ -402,7 +462,6 @@ function DetallePaquete({ paquete, onReservar }) {
                   {mostrarConvenios ? 'Mostrar menos' : `Ver los ${listaSocios.length} convenios (3 de ${listaSocios.length})`}
                 </button>
               )}
-              <a className="detalle-convenios-todos" href="#convenios">Ver todos los convenios &rarr;</a>
             </section>
 
             <section className="detalle-bloque">

@@ -30,7 +30,6 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [vistaGaleria, setVistaGaleria] = useState(() => window.location.hash === '#galeria');
   const [vistaPaquetes, setVistaPaquetes] = useState(() => window.location.hash === '#paquetes-todos');
-  const [vistaDescubre, setVistaDescubre] = useState(() => window.location.hash === '#descubre');
   const [indicePaquete, setIndicePaquete] = useState(obtenerIndicePaquete);
   const [reservaActiva, setReservaActiva] = useState(() =>
     /^#reserva\//.test(window.location.hash)
@@ -47,7 +46,7 @@ function App() {
       : 'inicio';
   });
   const [indiceGaleriaSeleccionada, setIndiceGaleriaSeleccionada] = useState(null);
-  const scrollRevealRef = useScrollReveal([vistaGaleria, vistaPaquetes, vistaDescubre, indicePaquete]);
+  const scrollRevealRef = useScrollReveal([vistaGaleria, vistaPaquetes, indicePaquete]);
   const paqueteSeleccionado = Number.isInteger(indicePaquete) ? paquetesEcoturismo[indicePaquete] : null;
   const enReserva = reservaActiva && paqueteSeleccionado;
   const cerrarReserva = () => {
@@ -65,8 +64,7 @@ function App() {
         }
         if (
           h === 'galeria' ||
-          h === 'paquetes-todos' ||
-          h === 'descubre'
+          h === 'paquetes-todos'
         ) {
           window.scrollTo(0, 0);
           return;
@@ -94,7 +92,6 @@ function App() {
     const alCambiarHash = () => {
       const esGaleria = window.location.hash === '#galeria';
       const esPaquetesTodos = window.location.hash === '#paquetes-todos';
-      const esDescubre = window.location.hash === '#descubre';
       const indice = obtenerIndicePaquete();
       const esPaquete = Number.isInteger(indice) && Boolean(paquetesEcoturismo[indice]);
       const esReserva = /^#reserva\//.test(window.location.hash);
@@ -103,15 +100,17 @@ function App() {
         ? 'inicio'
         : hash === 'galeria'
           ? 'galeria'
-          : ['experiencias', 'paquetes', 'destinos', 'convenios', 'nosotros', 'reserva', 'contacto'].includes(hash)
-            ? hash
-            : 'inicio';
+          : hash === 'descubre'
+            ? 'experiencias'
+            : ['experiencias', 'paquetes', 'destinos', 'convenios', 'nosotros', 'reserva', 'contacto'].includes(hash)
+              ? hash
+              : 'inicio';
 
-      setSeccionActiva(esDescubre ? 'experiencias' : (esPaquetesTodos || esPaquete ? 'paquetes' : nuevaSeccion));
+      setSeccionActiva(esPaquetesTodos || esPaquete ? 'paquetes' : nuevaSeccion);
       setIndicePaquete(esPaquete ? indice : null);
       setReservaActiva(esReserva && esPaquete);
 
-      if (esGaleria || esPaquetesTodos || esDescubre || esPaquete) {
+      if (esGaleria || esPaquetesTodos || esPaquete) {
         if (!enGaleriaRef.current) posInicioGaleria.current = window.scrollY;
         anclaPendiente.current = null;
       } else {        anclaPendiente.current = window.location.hash.replace('#', '') || null;
@@ -125,7 +124,6 @@ function App() {
         }
       }
       setVistaPaquetes(esPaquetesTodos);
-      setVistaDescubre(esDescubre);
       desplazarSegunHash();
     };
     window.addEventListener('hashchange', alCambiarHash);
@@ -136,6 +134,7 @@ function App() {
     const secciones = [
       ['inicio', 'inicio'],
       ['experiencias', 'experiencias'],
+      ['descubre', 'experiencias'],
       ['paquetes', 'paquetes'],
       ['destinos', 'galeria'],
       ['contacto', 'contacto'],
@@ -145,7 +144,7 @@ function App() {
     let ticking = false;
     const actualizarPorScroll = () => {
       ticking = false;
-      if (vistaGaleria || vistaPaquetes || vistaDescubre || paqueteSeleccionado || reservaActiva) return;
+      if (vistaGaleria || vistaPaquetes || paqueteSeleccionado || reservaActiva) return;
       const linea = window.innerHeight * 0.4;
       let actual = 'inicio';
       secciones.forEach(([domId, seccion]) => {
@@ -163,16 +162,14 @@ function App() {
     actualizarPorScroll();
     window.addEventListener('scroll', alHacerScroll, { passive: true });
     return () => window.removeEventListener('scroll', alHacerScroll);
-  }, [vistaGaleria, vistaPaquetes, vistaDescubre, paqueteSeleccionado, reservaActiva]);
+  }, [vistaGaleria, vistaPaquetes, paqueteSeleccionado, reservaActiva]);
 
   useEffect(() => {
     document.body.classList.toggle('con-barra-detalle', Boolean(paqueteSeleccionado && !reservaActiva));
-    document.body.classList.toggle('en-descubre', vistaDescubre);
     return () => {
       document.body.classList.remove('con-barra-detalle');
-      document.body.classList.remove('en-descubre');
     };
-  }, [paqueteSeleccionado, reservaActiva, vistaDescubre]);
+  }, [paqueteSeleccionado, reservaActiva]);
 
   useEffect(() => {
     try {
@@ -244,14 +241,11 @@ function App() {
             window.location.hash = `#paquete/${indice}`;
           }} />
         </main>
-      ) : vistaDescubre ? (
-        <main key="descubre" ref={scrollRevealRef}>
-          <Descubre />
-        </main>
       ) : (
         <main key="inicio" ref={scrollRevealRef}>
           <Hero />
           <Discover />
+          <Descubre />
           <Featured
             onVerDetalle={indice => {
               setIndicePaquete(indice);
