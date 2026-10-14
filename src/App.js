@@ -5,14 +5,13 @@ import useScrollReveal from './utils/useScrollReveal';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import Hero from './components/inicio/Hero';
-import Discover from './components/inicio/Discover';
+import ColibriExperiencias from './components/inicio/ColibriExperiencias';
 import Featured from './components/inicio/Featured';
 import Partners from './components/inicio/Partners';
 import Gallery from './components/inicio/Gallery';
 import CTA from './components/inicio/CTA';
 import Contacto from './components/inicio/Contacto';
 import PaquetesCompleta from './components/inicio/PaquetesCompleta';
-import Descubre from './components/inicio/Descubre';
 import DetallePaquete from './components/inicio/DetallePaquete';
 import ReservarExperiencia from './components/inicio/ReservarExperiencia';
 import WhatsAppButton from './components/layout/WhatsAppButton';
@@ -244,8 +243,7 @@ function App() {
       ) : (
         <main key="inicio" ref={scrollRevealRef}>
           <Hero />
-          <Discover />
-          <Descubre />
+          <ColibriExperiencias />
           <Featured
             onVerDetalle={indice => {
               setIndicePaquete(indice);

@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pregúntale al Colibrí</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Montserrat:wght@400;500;600;700;800&display=swap">
+<style>
+/* Concepto: una conversación con el colibrí del logo (izquierda) que va armando un visor de fotos reales (derecha).
+   En celular: colibrí y charla arriba, visor debajo. Identidad de la web Manaure Vive: crema, bosque y naranja. */
+:root {
+  --papel: #FBF7EE;
+  --superficie: #FFFFFF;
+  --arena: #F1E9D8;
+  --tinta: #1C2A22;
+  --suave: #5A6A60;
+  --bosque: #0E3B2A;
+  --sol: #E8830C;
+  --sol-boton: #D06A04;
+  --sol-tinta: #A85500;
+  --linea: rgba(28, 42, 34, .13);
+  --sombra: 0 18px 40px -22px rgba(14, 59, 42, .45);
+  --globo: #FFFFFF;
+  --display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --texto: "Montserrat", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --papel: #0F1612; --superficie: #17221C; --arena: #1F2C25; --tinta: #EAF1EC; --suave: #A9B9AF;
+    --bosque: #A7DDBD; --sol: #F29A33; --sol-boton: #D06A04; --sol-tinta: #FFB766; --linea: rgba(234, 241, 236, .14);
+    --sombra: 0 18px 40px -22px rgba(0, 0, 0, .9); --globo: #1F2C25; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --papel: #0F1612; --superficie: #17221C; --arena: #1F2C25; --tinta: #EAF1EC; --suave: #A9B9AF;
+  --bosque: #A7DDBD; --sol: #F29A33; --sol-boton: #D06A04; --sol-tinta: #FFB766; --linea: rgba(234, 241, 236, .14);
+  --sombra: 0 18px 40px -22px rgba(0, 0, 0, .9); --globo: #1F2C25; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--papel); color: var(--tinta); font-family: var(--texto); font-size: 15px; line-height: 1.55; margin: 0; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--sol); outline-offset: 2px; border-radius: 6px; }
+.volver-sitio { display: inline-flex; align-items: center; min-height: 44px; color: var(--bosque); font-size: 13px; font-weight: 700; }
+.volver-sitio:hover { color: var(--sol-tinta); }
+img { display: block; max-width: 100%; }
+[hidden] { display: none !important; }
+
+.seccion { max-width: 1180px; margin: 0 auto; padding: 40px 20px 56px; display: flex; flex-direction: column; gap: 28px; }
+
+/* Cabecera */
+.cab { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px 32px; align-items: end; }
+.eyebrow { margin: 0; font-size: 12px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--sol-tinta); }
+.cab h1 { margin: 4px 0 6px; font-family: var(--display); font-weight: 700; font-size: clamp(32px, 5vw, 52px); line-height: 1.05; color: var(--bosque); text-wrap: balance; }
+.cab h1 em { color: var(--sol); font-style: italic; }
+.lead { margin: 0; max-width: 58ch; color: var(--suave); font-size: 15.5px; }
+.modos { display: inline-flex; background: var(--arena); border-radius: 999px; padding: 4px; gap: 4px; align-self: end; }
+.modos button { border: 0; background: transparent; border-radius: 999px; padding: 10px 18px; font-weight: 700; font-size: 13.5px; color: var(--suave); min-height: 44px; }
+.modos button[aria-selected="true"] { background: var(--superficie); color: var(--bosque); box-shadow: 0 4px 14px -8px rgba(0, 0, 0, .4); }
+
+/* Escena del guía */
+.escena { display: grid; grid-template-columns: minmax(300px, 400px) minmax(0, 1fr); gap: 28px; align-items: start; }
+.charla { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); display: flex; flex-direction: column; gap: 14px; }
+.ave-wrap { display: flex; align-items: flex-end; gap: 12px; }
+.ave { width: 132px; height: auto; flex: none; filter: drop-shadow(0 12px 14px rgba(14, 59, 42, .25)); transform-origin: 60% 50%; animation: flotar 3.2s ease-in-out infinite; }
+.ave.habla { animation: flotar 3.2s ease-in-out infinite, asentir .5s ease 2; }
+@keyframes flotar { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-8px) rotate(-2deg); } }
+@keyframes asentir { 50% { rotate: 6deg; } }
+.ave-nombre { font-size: 12px; font-weight: 700; color: var(--suave); padding-bottom: 14px; }
+.ave-nombre b { display: block; font-family: var(--display); font-size: 19px; color: var(--bosque); }
+
+.hilo { display: flex; flex-direction: column; gap: 10px; padding: 2px 2px 4px; }
+.globo { max-width: 92%; padding: 12px 15px; border-radius: 4px 18px 18px 18px; background: var(--globo); border: 1px solid var(--linea); box-shadow: var(--sombra); font-size: 14.5px; font-weight: 500; animation: entrar .35s ease both; }
+.globo.yo { align-self: flex-end; border-radius: 18px 4px 18px 18px; background: var(--sol-boton); border-color: transparent; color: #FFFFFF; font-weight: 700; box-shadow: none; }
+.globo.escribe { display: inline-flex; gap: 5px; width: fit-content; }
+.globo.escribe i { width: 7px; height: 7px; border-radius: 50%; background: var(--suave); animation: punto 1s infinite ease-in-out; }
+.globo.escribe i:nth-child(2) { animation-delay: .15s; } .globo.escribe i:nth-child(3) { animation-delay: .3s; }
+@keyframes punto { 0%, 100% { opacity: .25; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-3px); } }
+@keyframes entrar { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.opciones { display: flex; flex-wrap: wrap; gap: 8px; }
+.op { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 5px 14px 5px 5px; border-radius: 999px; border: 1.5px solid var(--linea); background: var(--superficie); font-weight: 700; font-size: 13.5px; color: var(--tinta); transition: border-color .2s, transform .2s; animation: entrar .3s ease both; }
+.op:hover { border-color: var(--sol); transform: translateY(-1px); }
+.op img { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; }
+.op.simple { padding: 5px 16px; }
+.op.secundaria { border-style: dashed; color: var(--suave); }
+
+/* Visor */
+.visor { min-width: 0; display: flex; flex-direction: column; gap: 18px; }
+.mapa-emociones { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 230px; gap: 10px; }
+.emo { position: relative; border: 0; padding: 0; border-radius: 18px; overflow: hidden; background: var(--arena); text-align: left; }
+.emo img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
+.emo:hover img { transform: scale(1.05); }
+.emo span { position: absolute; left: 0; right: 0; bottom: 0; padding: 40px 14px 12px; color: #FFFFFF; background: linear-gradient(transparent, rgba(8, 20, 14, .82)); }
+.emo b { display: block; font-family: var(--display); font-size: 21px; line-height: 1.1; }
+.emo small { font-size: 12px; font-weight: 600; opacity: .9; font-variant-numeric: tabular-nums; }
+
+.collage { display: grid; grid-template-columns: 1.35fr 1fr 1fr; grid-template-rows: 170px 170px; gap: 10px; }
+.foto { position: relative; margin: 0; border-radius: 16px; overflow: hidden; background: var(--arena); animation: abanico .7s cubic-bezier(.2, .8, .2, 1) both; }
+.foto:first-child { grid-row: span 2; }
+.foto:nth-child(4) { grid-column: span 2; }
+.foto img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+.foto figcaption { position: absolute; left: 10px; bottom: 10px; right: 10px; width: fit-content; max-width: calc(100% - 20px); padding: 5px 10px; border-radius: 999px; background: rgba(8, 20, 14, .72); color: #FFFFFF; font-size: 12px; font-weight: 600; }
+.foto:nth-child(2) { animation-delay: .08s; } .foto:nth-child(3) { animation-delay: .16s; } .foto:nth-child(4) { animation-delay: .24s; }
+@keyframes abanico { from { opacity: 0; transform: translate(-40px, 24px) rotate(-8deg) scale(.86); } to { opacity: 1; transform: none; } }
+
+.fila-plan { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 16px; align-items: stretch; }
+.aliados { background: var(--arena); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.titulito { margin: 0; font-size: 11.5px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--suave); }
+.aliado { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 14px; }
+.aliado img { width: 40px; height: 40px; border-radius: 50%; object-fit: contain; background: #FFFFFF; border: 1.5px solid var(--sol); padding: 2px; }
+.altura { margin-top: auto; font-size: 13px; color: var(--suave); font-variant-numeric: tabular-nums; }
+.altura b { color: var(--bosque); font-size: 17px; }
+
+.plan { background: var(--superficie); border: 1.5px solid var(--linea); border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 8px; box-shadow: var(--sombra); }
+.plan.ideal { border-color: var(--sol); }
+.sello { align-self: flex-start; font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--sol-tinta); background: color-mix(in srgb, var(--sol) 14%, transparent); padding: 4px 10px; border-radius: 999px; }
+.plan h3 { margin: 0; font-family: var(--display); font-size: 25px; line-height: 1.15; color: var(--bosque); }
+.incluye { margin: 0; font-weight: 600; color: var(--tinta); }
+.datos { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; color: var(--suave); }
+.precio { display: flex; align-items: baseline; gap: 6px; font-variant-numeric: tabular-nums; }
+.precio small { color: var(--suave); font-weight: 600; }
+.precio b { font-size: 26px; color: var(--tinta); }
+.acciones { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 0 18px; border-radius: 999px; font-weight: 800; font-size: 13.5px; text-decoration: none; border: 2px solid transparent; }
+.btn.wa { background: var(--sol-boton); color: #FFFFFF; flex: 1 1 200px; }
+.btn.mapa { border-color: var(--bosque); color: var(--bosque); flex: 1 1 160px; }
+.btn:hover { filter: brightness(1.06); }
+.tambien { margin: 2px 0 0; font-size: 13px; color: var(--suave); }
+.tambien button { border: 0; background: none; padding: 0; color: var(--sol-tinta); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+
+/* Medidor de adrenalina */
+.medidor { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 28px; align-items: center; }
+.medidor-foto { position: relative; border-radius: 22px; overflow: hidden; aspect-ratio: 4 / 3; max-width: 100%; background: var(--arena); }
+.medidor-foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; transition: opacity .5s ease; }
+.medidor-foto .nivel-tag { position: absolute; left: 14px; top: 14px; padding: 6px 12px; border-radius: 999px; background: rgba(8, 20, 14, .72); color: #FFFFFF; font-weight: 700; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.medidor-info { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.medidor-info h2 { margin: 0; font-family: var(--display); font-size: clamp(26px, 3.4vw, 36px); line-height: 1.1; color: var(--bosque); }
+.dial { display: flex; flex-direction: column; gap: 6px; }
+.dial-escala { display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; color: var(--suave); }
+input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 56px; background: transparent; }
+input[type="range"]::-webkit-slider-runnable-track { height: 12px; border-radius: 99px; background: linear-gradient(90deg, #6FB58A, #E8C24A 50%, #E8830C 75%, #D23B2B); }
+input[type="range"]::-moz-range-track { height: 12px; border-radius: 99px; background: linear-gradient(90deg, #6FB58A, #E8C24A 50%, #E8830C 75%, #D23B2B); }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 54px; height: 54px; margin-top: -21px; border: 0; background: url("colibri.webp") center / contain no-repeat; cursor: grab; }
+input[type="range"]::-moz-range-thumb { width: 54px; height: 54px; border: 0; background: url("colibri.webp") center / contain no-repeat; cursor: grab; }
+.barras { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px 12px; align-items: center; font-size: 13px; font-weight: 700; color: var(--suave); }
+.barra { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+.barra i { height: 8px; border-radius: 4px; background: var(--arena); }
+.barra i.on { background: var(--sol); }
+.globo.medidor-dice { max-width: 100%; }
+
+@media (max-width: 860px) {
+  .cab { grid-template-columns: 1fr; }
+  .modos { justify-self: start; }
+  .escena, .medidor { grid-template-columns: 1fr; }
+  .charla { position: static; }
+  .ave { width: 104px; }
+}
+@media (max-width: 560px) {
+  .seccion { padding: 28px 16px 44px; gap: 22px; }
+  .mapa-emociones { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 150px; }
+  .collage { grid-template-columns: 1fr 1fr; grid-template-rows: 200px 130px 130px; }
+  .foto:first-child { grid-row: span 1; grid-column: span 2; }
+  .foto:nth-child(4) { grid-column: span 2; }
+  .fila-plan { grid-template-columns: 1fr; }
+  .modos button { padding: 10px 12px; font-size: 13px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<main class="seccion">
+  <a class="volver-sitio" href="../index.html#experiencias">&larr; Volver a Manaure Vive</a>
+  <header class="cab">
+    <div>
+      <p class="eyebrow">Experiencias · Manaure, Cesar</p>
+      <h1>Pregúntale al <em>colibrí</em></h1>
+      <p class="lead">Dile qué te provoca vivir y el guía de Manaure Vive te arma el plan con fotos reales de los aliados, desde el río a 750 m hasta el páramo a 3.200 m.</p>
+    </div>
+    <div class="modos" role="tablist" aria-label="Forma de explorar">
+      <button role="tab" id="tabGuia" aria-selected="true" aria-controls="guia">Conversar con el guía</button>
+      <button role="tab" id="tabMedidor" aria-selected="false" aria-controls="medidor">Medidor de adrenalina</button>
+    </div>
+  </header>
+
+  <section id="guia" class="escena" role="tabpanel" aria-labelledby="tabGuia">
+    <div class="charla">
+      <div class="ave-wrap">
+        <img class="ave" id="ave" src="colibri.webp" alt="Colibrí guía de Manaure Vive" width="420" height="421">
+        <div class="ave-nombre"><b>El colibrí</b>Guía de Manaure Vive</div>
+      </div>
+      <div class="hilo" id="hilo" aria-live="polite"></div>
+      <div class="opciones" id="opciones"></div>
+    </div>
+    <div class="visor" id="visor"></div>
+  </section>
+
+  <section id="medidor" class="medidor" role="tabpanel" aria-labelledby="tabMedidor" hidden>
+    <div class="medidor-foto">
+      <img id="mfA" alt="">
+      <img id="mfB" alt="" style="opacity:0">
+      <span class="nivel-tag" id="mNivel"></span>
+    </div>
+    <div class="medidor-info">
+      <p class="eyebrow">¿Cuánta adrenalina quieres hoy?</p>
+      <h2 id="mTitulo"></h2>
+      <div class="dial">
+        <label for="mRango" class="titulito">Mueve al colibrí</label>
+        <input type="range" id="mRango" min="1" max="5" step="1" value="3">
+        <div class="dial-escala"><span>Relax total</span><span>Adrenalina pura</span></div>
+      </div>
+      <div class="globo medidor-dice" id="mDice"></div>
+      <div class="barras">
+        <span>Esfuerzo</span><div class="barra" id="mEsfuerzo"></div>
+        <span>Emoción</span><div class="barra" id="mEmocion"></div>
+      </div>
+      <div id="mPlan"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  const WA = "573012706114";
+  const MAPA = "../brochure/mapa-3d.html?dest=";
+  const F = (n) => `fotos/${n}.webp`;
+  // Logos: se reutilizan los originales del sitio (sin duplicados).
+  const FL = (a) => `../assets/partners/${a}.webp`;
+  const LOGO = {
+    "manaure-aventura": "Manaure Aventura", "cuatri-tours-manaure": "Cuatri Tours Manaure", "metallura": "Metallura Nature",
+    "coruscans": "El Coruscans", "la-casa-de-las-arepas": "La Casa de las Arepas", "villa-adelaida": "Villa Adelaida",
+    "mashiramo-glamping": "Mashiramo Glamping", "absolom-casita-de-la-mora": "Absolom · Casita de la Mora",
+    "photours": "PHOtours", "los-pinos-manaure": "Los Pinos Manaure"
+  };
+  const PLANES = {
+    adrenalina: { nombre: "Adrenalina Serrana", incluye: "Parapente + Cuatrimoto + Río", dur: "Día completo", tiempo: "pasadia", grupo: "2 a 10 personas", con: ["amigos", "solo", "pareja"], precio: "$340.000", por: "por persona" },
+    metallura: { nombre: "Expedición Metallura", incluye: "Aves + Páramo + Reserva ProAves", dur: "2 días y 1 noche", tiempo: "finde", grupo: "2 a 8 personas", con: ["amigos", "solo", "pareja", "familia"], precio: "$520.000", por: "por persona" },
+    sabana: { nombre: "Travesía Sabana Rubia", incluye: "Páramo + 4x4 de montaña + picnic", dur: "1 día", tiempo: "pasadia", con: ["amigos", "solo", "pareja"], precio: "$280.000", por: "por persona" },
+    sabores: { nombre: "Sabores del Perijá", incluye: "4 estaciones + Cata de café + Mora", dur: "Día completo", tiempo: "pasadia", grupo: "2 a 8 personas", con: ["pareja", "amigos", "familia", "solo"], precio: "$175.000", por: "por persona" },
+    grano: { nombre: "Ruta del Grano a la Fruta", incluye: "Café + Moras + Topiarios", dur: "Día completo", tiempo: "pasadia", grupo: "2 a 10 personas", con: ["familia", "amigos", "pareja", "solo"], precio: "$145.000", por: "por persona" },
+    cumbres: { nombre: "Cumbres de Niebla", incluye: "Domo + Jacuzzi + Vino de mora", dur: "Fin de semana", tiempo: "finde", grupo: "2 personas", con: ["pareja"], precio: "$790.000", por: "por pareja" },
+    safari: { nombre: "Safari Fotográfico", incluye: "Cascadas + Vestido flotante + 15 fotos", dur: "Día completo", tiempo: "pasadia", grupo: "2 a 6 personas", con: ["pareja", "amigos", "solo"], precio: "$290.000", por: "por persona" },
+    oasis: { nombre: "Pasadía Oasis Familiar", incluye: "Piscina + Parque Los Pinos + Almuerzo a la leña", dur: "1 día", tiempo: "pasadia", con: ["familia", "amigos", "pareja"], precio: "$115.000", por: "por persona" }
+  };
+  const CATS = [
+    { id: "adrenalina", nombre: "Adrenalina", sub: "Parapente y cuatrimoto", altura: "1.450 m", dest: "aventura",
+      dice: "¡Agárrate! Aquí despegas en parapente a 1.450 metros y bajas por las trochas del cañón en cuatrimoto.",
+      fotos: [["parapente-tandem-canon", "Vuelo tándem sobre el cañón"], ["cuatrimoto-aventura-cordillera", "Trochas frente a la cordillera"], ["cuatrimoto-flota", "Flota de cuatrimotos 4x4"], ["manaure-aventura-camping", "Camping en el Cerro de La Cruz"]],
+      aliados: ["manaure-aventura", "cuatri-tours-manaure"], planes: ["adrenalina"] },
+    { id: "naturaleza", nombre: "Páramo y aves", sub: "Frailejones y colibríes", altura: "3.200 m", dest: "metallura",
+      dice: "Mi tierra favorita: el páramo de Sabana Rubia, con frailejones gigantes y mi primo, el colibrí del Perijá.",
+      fotos: [["serrania-perija-frailejones", "Frailejones de Sabana Rubia"], ["metallura-01", "Senderos de alta montaña"], ["photours-expedicion-01", "Expedición entre frailejones"], ["metallura-02", "Avistamiento de aves"]],
+      aliados: ["metallura", "coruscans"], planes: ["metallura", "sabana"] },
+    { id: "sabor", nombre: "Sabor de montaña", sub: "Arepas, café y mora", altura: "750 a 1.250 m", dest: "arepas",
+      dice: "Prepárate para comer: arepas de maíz cariaco al carbón, café de altura recién tostado y dulces de mora.",
+      fotos: [["arepas-plancha", "Arepas al carbón de leña"], ["coruscans-cafe", "Cata de café de altura"], ["villa-adelaida-comida", "Fogón campesino"], ["gastronomia-casa-arepas", "La Casa de las Arepas"]],
+      aliados: ["la-casa-de-las-arepas", "coruscans", "villa-adelaida"], planes: ["sabores", "grano"] },
+    { id: "romance", nombre: "Romance en la niebla", sub: "Domo, jacuzzi y estrellas", altura: "2.400 m", dest: "mashiramo",
+      dice: "Un domo en el bosque de niebla, jacuzzi bajo las estrellas y vino de mora. Yo me hago el desentendido.",
+      fotos: [["mashiramo-real-domo", "Domo geodésico en Mashiramo"], ["mashiramo-real-noche", "Noche en el bosque de niebla"], ["absolom-moras-macro", "Mora silvestre de Absolom"], ["serrania-perija-cordillera", "Amanecer sobre la cordillera"]],
+      aliados: ["mashiramo-glamping", "absolom-casita-de-la-mora"], planes: ["cumbres"] },
+    { id: "foto", nombre: "Fotografía", sub: "Cascadas y topiarios", altura: "950 a 1.320 m", dest: "photours",
+      dice: "Trae batería extra: cascadas escondidas, esculturas de pino y la hora dorada sobre los farallones.",
+      fotos: [["photours-cascada", "Cascada del cañón"], ["serrania-topiarios", "Esculturas vivas de Los Pinos"], ["los-pinos-01", "Jardín de topiarios"], ["serrania-perija-panoramica", "Farallones del Perijá"]],
+      aliados: ["photours", "los-pinos-manaure"], planes: ["safari"] },
+    { id: "familia", nombre: "Familia y relax", sub: "Pozas, piscina y fogón", altura: "750 m", dest: "villa",
+      dice: "Plan tranquilo: pozas de agua cristalina del río Manaure, zonas verdes y almuerzo criollo a la leña.",
+      fotos: [["villa-adelaida-01", "Jardines de Villa Adelaida"], ["serrania-pozo-cristalino", "Pozas del río Manaure"], ["villa-adelaida-02", "Zonas verdes y quioscos"], ["los-pinos-02", "Paseo por Los Pinos"]],
+      aliados: ["villa-adelaida", "los-pinos-manaure"], planes: ["oasis", "grano"] }
+  ];
+  const CON = { pareja: "en pareja", familia: "en familia", amigos: "con amigos", solo: "solo" };
+  const TIEMPO = { pasadia: "un pasadía", finde: "un fin de semana" };
+  const $ = (id) => document.getElementById(id);
+  const reducir = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const st = { cat: null, con: null, tiempo: null, plan: null };
+
+  /* ── Conversación ── */
+  const hilo = $("hilo"), opciones = $("opciones"), ave = $("ave");
+  const esperar = (ms) => new Promise((r) => setTimeout(r, reducir ? 0 : ms));
+  let turno = 0;
+  function globo(texto, yo) {
+    const g = document.createElement("div");
+    g.className = "globo" + (yo ? " yo" : "");
+    g.textContent = texto;
+    hilo.appendChild(g);
+    // la charla muestra solo los últimos mensajes para que no crezca sin fin
+    while (hilo.children.length > 5) hilo.firstElementChild.remove();
+    return g;
+  }
+  async function dice(texto) {
+    const mio = ++turno;
+    const e = document.createElement("div");
+    e.className = "globo escribe";
+    e.setAttribute("aria-label", "El colibrí está escribiendo");
+    e.innerHTML = "<i></i><i></i><i></i>";
+    hilo.appendChild(e);
+    await esperar(650);
+    e.remove();
+    if (mio !== turno) return false;
+    ave.classList.remove("habla"); void ave.offsetWidth; ave.classList.add("habla");
+    globo(texto);
+    return true;
+  }
+  function ofrecer(lista) {
+    opciones.innerHTML = "";
+    lista.forEach((o, i) => {
+      const b = document.createElement("button");
+      b.className = "op" + (o.img ? "" : " simple") + (o.secundaria ? " secundaria" : "");
+      b.style.animationDelay = (reducir ? 0 : i * 45) + "ms";
+      if (o.img) { const im = document.createElement("img"); im.src = o.img; im.alt = ""; b.appendChild(im); }
+      b.appendChild(document.createTextNode(o.texto));
+      b.onclick = o.accion;
+      opciones.appendChild(b);
+    });
+  }
+
+  async function inicio() {
+    hilo.innerHTML = ""; opciones.innerHTML = "";
+    Object.assign(st, { cat: null, con: null, tiempo: null, plan: null });
+    pintarEmociones();
+    if (!(await dice("¡Hola! Soy el colibrí de Manaure Vive. ¿Qué experiencia quieres vivir?"))) return;
+    ofrecer(CATS.map((c) => ({ texto: c.nombre, img: F(c.fotos[0][0]), accion: () => elegir(c.id) })));
+  }
+  async function elegir(id) {
+    const c = CATS.find((x) => x.id === id);
+    st.cat = c; st.con = null; st.tiempo = null;
+    opciones.innerHTML = "";
+    globo(c.nombre, true);
+    pintarCategoria();
+    if (!(await dice(c.dice))) return;
+    if (!(await dice("¿Con quién vienes? Así te recomiendo el plan justo."))) return;
+    ofrecer([
+      ...Object.keys(CON).map((k) => ({ texto: k[0].toUpperCase() + k.slice(1), accion: () => conQuien(k) })),
+      { texto: "Ver otra experiencia", secundaria: true, accion: inicio }
+    ]);
+  }
+  async function conQuien(k) {
+    st.con = k; opciones.innerHTML = "";
+    globo(k[0].toUpperCase() + k.slice(1), true);
+    pintarCategoria();
+    if (!(await dice("¿Y cuánto tiempo tienes?"))) return;
+    ofrecer([
+      { texto: "Un pasadía", accion: () => cuanto("pasadia") },
+      { texto: "Un fin de semana", accion: () => cuanto("finde") }
+    ]);
+  }
+  async function cuanto(k) {
+    st.tiempo = k; opciones.innerHTML = "";
+    globo(TIEMPO[k][0].toUpperCase() + TIEMPO[k].slice(1), true);
+    pintarCategoria(true);
+    const p = PLANES[st.plan];
+    const encaja = p.tiempo === st.tiempo && p.con.includes(st.con);
+    const texto = encaja
+      ? `Listo, tu plan ideal es ${p.nombre}. Te lo dejé ${matchMedia("(max-width: 860px)").matches ? "aquí abajo" : "a la derecha"} con el precio y el botón para reservar.`
+      : `Lo más cercano a lo que buscas es ${p.nombre} (${p.dur.toLowerCase()}). Escríbenos y lo ajustamos a tu grupo.`;
+    if (!(await dice(texto))) return;
+    if (matchMedia("(max-width: 860px)").matches) visor.querySelector(".plan")?.scrollIntoView({ behavior: reducir ? "auto" : "smooth", block: "center" });
+    ofrecer([
+      { texto: "Ver otra experiencia", accion: inicio },
+      { texto: "Cambiar con quién voy", secundaria: true, accion: () => elegir(st.cat.id) }
+    ]);
+  }
+
+  /* ── Elección del plan: misma categoría, primero el que encaja con tiempo y compañía ── */
+  function escogerPlan() {
+    const c = st.cat;
+    const puntos = (k) => (st.tiempo && PLANES[k].tiempo === st.tiempo ? 2 : 0) + (st.con && PLANES[k].con.includes(st.con) ? 1 : 0);
+    return [...c.planes].sort((a, b) => puntos(b) - puntos(a))[0];
+  }
+
+  /* ── Visor ── */
+  const visor = $("visor");
+  function pintarEmociones() {
+    visor.innerHTML = `<div class="mapa-emociones">${CATS.map((c) => `
+      <button class="emo" data-id="${c.id}" aria-label="Ver ${c.nombre}">
+        <img src="${F(c.fotos[0][0])}" alt="" loading="lazy">
+        <span><b>${c.nombre}</b><small>${c.sub} · ${c.altura}</small></span>
+      </button>`).join("")}</div>`;
+    visor.querySelectorAll(".emo").forEach((b) => (b.onclick = () => elegir(b.dataset.id)));
+  }
+  function enlaceWa(p, nombreCat) {
+    const enGuia = !$("guia").hidden;
+    const extra = [enGuia && st.con ? `vamos ${CON[st.con]}` : "", enGuia && st.tiempo ? `tenemos ${TIEMPO[st.tiempo]}` : ""].filter(Boolean).join(" y ");
+    const msj = `Hola Manaure Vive, quiero el plan "${p.nombre}" (${nombreCat})${extra ? ", " + extra : ""}. ¿Me ayudan a reservar?`;
+    return `https://wa.me/${WA}?text=${encodeURIComponent(msj)}`;
+  }
+  function tarjetaPlan(p, ideal, dest, nombreCat) {
+    return `<div class="plan${ideal ? " ideal" : ""}">
+      <span class="sello">${ideal ? "Tu plan ideal" : "Recomendado"}</span>
+      <h3>${p.nombre}</h3>
+      <p class="incluye">${p.incluye}</p>
+      <div class="datos"><span>${p.dur}</span>${p.grupo ? `<span>${p.grupo}</span>` : ""}<span>Manaure, Cesar</span></div>
+      <div class="precio"><small>Desde</small><b>${p.precio}</b><small>${p.por}</small></div>
+      <div class="acciones">
+        <a class="btn wa" href="${enlaceWa(p, nombreCat)}" target="_blank" rel="noopener">Reservar por WhatsApp</a>
+        <a class="btn mapa" href="${MAPA}${dest}" target="_blank" rel="noopener">Ver en el mapa 3D</a>
+      </div>
+    </div>`;
+  }
+  function pintarCategoria(ideal) {
+    const c = st.cat;
+    st.plan = escogerPlan();
+    const otro = c.planes.find((k) => k !== st.plan);
+    visor.innerHTML = `
+      <div class="collage">${c.fotos.map(([f, t]) => `<figure class="foto"><img src="${F(f)}" alt="${t}"><figcaption>${t}</figcaption></figure>`).join("")}</div>
+      <div class="fila-plan">
+        <div class="aliados">
+          <p class="titulito">Te lo ofrecen</p>
+          ${c.aliados.map((a) => `<div class="aliado"><img src="${FL(a)}" alt="">${LOGO[a]}</div>`).join("")}
+          <p class="altura">Altura del plan<br><b>${c.altura}</b> sobre el nivel del mar</p>
+        </div>
+        <div>
+          ${tarjetaPlan(PLANES[st.plan], !!ideal, c.dest, c.nombre)}
+          ${otro ? `<p class="tambien">También te puede gustar: <button type="button" data-plan="${otro}">${PLANES[otro].nombre}</button></p>` : ""}
+        </div>
+      </div>`;
+    const b = visor.querySelector(".tambien button");
+    if (b) b.onclick = () => { c.planes = [b.dataset.plan, ...c.planes.filter((k) => k !== b.dataset.plan)]; st.con = null; st.tiempo = null; pintarCategoria(); };
+  }
+
+  /* ── Medidor de adrenalina ── */
+  const NIVELES = [
+    { n: 1, titulo: "Relax total", foto: "serrania-pozo-cristalino", plan: "oasis", dest: "villa", esfuerzo: 1, emocion: 1, dice: "Hoy nada de afanes: pozas de agua cristalina, hamaca y almuerzo a la leña." },
+    { n: 2, titulo: "Romance en la niebla", foto: "mashiramo-real-noche", plan: "cumbres", dest: "mashiramo", esfuerzo: 1, emocion: 3, dice: "Un poquito más de emoción, pero de la buena: domo, jacuzzi y cielo estrellado." },
+    { n: 3, titulo: "Sabor y café de altura", foto: "coruscans-cafe", plan: "sabores", dest: "coruscans", esfuerzo: 2, emocion: 3, dice: "Recorres cuatro estaciones de sabor y terminas con una cata de café entre cafetales." },
+    { n: 4, titulo: "Caminata de páramo", foto: "serrania-perija-frailejones", plan: "sabana", dest: "metallura", esfuerzo: 4, emocion: 4, dice: "Subes en 4x4 y caminas entre frailejones a más de 3.000 metros. Lleva chaqueta." },
+    { n: 5, titulo: "Adrenalina pura", foto: "parapente-tandem-canon", plan: "adrenalina", dest: "aventura", esfuerzo: 4, emocion: 5, dice: "¡Esto es lo mío! Parapente sobre el cañón y cuatrimoto por las trochas. ¿Te le mides?" }
+  ];
+  let capaM = "A";
+  const barra = (el, v) => { el.innerHTML = Array.from({ length: 5 }, (_, i) => `<i class="${i < v ? "on" : ""}"></i>`).join(""); };
+  function pintarMedidor() {
+    const v = +$("mRango").value, L = NIVELES[v - 1], p = PLANES[L.plan];
+    const sale = $("mf" + capaM), entra = $("mf" + (capaM === "A" ? "B" : "A"));
+    if (sale.dataset.f !== L.foto) {
+      entra.src = F(L.foto); entra.alt = L.titulo; entra.dataset.f = L.foto;
+      entra.style.opacity = "1"; sale.style.opacity = "0"; capaM = capaM === "A" ? "B" : "A";
+    }
+    $("mNivel").textContent = `Nivel ${v} de 5`;
+    $("mTitulo").textContent = L.titulo;
+    $("mDice").textContent = L.dice;
+    barra($("mEsfuerzo"), L.esfuerzo); barra($("mEmocion"), L.emocion);
+    $("mPlan").innerHTML = tarjetaPlan(p, false, L.dest, L.titulo);
+    $("mRango").setAttribute("aria-valuetext", `${L.titulo}, nivel ${v} de 5`);
+  }
+  $("mRango").addEventListener("input", pintarMedidor);
+
+  /* ── Pestañas ── */
+  function modo(m) {
+    const g = m === "guia";
+    $("tabGuia").setAttribute("aria-selected", String(g));
+    $("tabMedidor").setAttribute("aria-selected", String(!g));
+    $("guia").hidden = !g; $("medidor").hidden = g;
+    if (!g) pintarMedidor();
+  }
+  $("tabGuia").onclick = () => modo("guia");
+  $("tabMedidor").onclick = () => modo("medidor");
+  $("mfA").src = F(NIVELES[2].foto); $("mfA").dataset.f = NIVELES[2].foto;
+
+  inicio();
+
+  const avisarAltura = () => {
+    if (window.parent === window) return;
+    document.querySelector(".volver-sitio").hidden = true;
+    window.parent.postMessage({ type: "colibri-prototype:height", height: Math.ceil(document.body.scrollHeight) }, window.location.origin);
+  };
+  if (window.ResizeObserver) new ResizeObserver(avisarAltura).observe(document.body);
+  window.addEventListener("load", avisarAltura);
+  avisarAltura();
+})();
+</script>
+</body>
+</html>

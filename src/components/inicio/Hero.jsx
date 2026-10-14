@@ -45,7 +45,7 @@ function Hero() {
           gastronomía y experiencias<br /></h1>
         <p>que conectan con el territorio.</p>
         <div className="hero-actions">
-          <a className="btn btn-primary" href="#descubre">Explorar experiencias <span aria-hidden="true">→</span></a>
+          <a className="btn btn-primary" href="#experiencias">Explorar experiencias <span aria-hidden="true">→</span></a>
           <a className="btn btn-ghost" href="#paquetes-todos">Ver paquetes <span aria-hidden="true">→</span></a>
         </div>
       </div>

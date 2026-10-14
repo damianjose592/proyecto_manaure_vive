@@ -3,3 +3,7 @@
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
+
+// jsdom no implementa scrollIntoView (App.js lo usa al navegar por hash).
+window.HTMLElement.prototype.scrollIntoView = jest.fn();
+window.scrollTo = jest.fn();

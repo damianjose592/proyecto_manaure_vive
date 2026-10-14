@@ -1,0 +1,11 @@
+.colibri-experiencias {
+  width: 100%;
+  overflow: hidden;
+  background: #fbf7ee;
+}
+
+.colibri-experiencias iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+}

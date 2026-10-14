@@ -4,7 +4,7 @@
 > **Tipo:** Landing page + Galería + Detalle de paquetes ecoturísticos
 > **Stack:** React 19 + react-scripts 5 (Create React App) · Sin react-router · Enrutamiento manual por `window.location.hash`
 > **Despliegue:** `gh-pages` → `https://fran3004.github.io/proyecto_restaurant` · Vercel → repo propio `damianjose592/proyecto_manaure_vive` rama `main` (`homepage: "."` relativo en `package.json` desde 2026-09-27, sirve en ambos)
-> **Fecha memoria:** 2026-09-26 (rev. 2: 10 paquetes Manaure Vive + convenios N + relacionados)
+> **Fecha memoria:** 2026-09-26 (rev. 2: 10 paquetes Manaure Vive + convenios N + relacionados) · rev. 2026-10-14: sección «Pregúntale al Colibrí» (`ColibriExperiencias` + `public/prototipo-colibri/`), `Discover` eliminado de la portada, filtro `Descubre` desmontado (CTA Hero → `#experiencias`)
 > **Archivos base analizados:** `src/App.js` (285 líneas), `src/index.js`, `src/components/**`, `src/utils/**`, `src/styles/**`, `public/index.html`, `public/manifest.json`, `EXPERIENCIAS_Y_SOCIOS.md`
 
 ---
@@ -83,6 +83,7 @@ proyecto_restaurant/
 │   ├── index.html (lang=es, SEO, OG, JSON-LD, fonts)
 │   ├── manifest.json (PWA Villa Adelaida)
 │   ├── robots.txt
+│   ├── prototipo-colibri/ (rev. 2026-10-14: `index.html` autocontenido + `colibri.webp` + `fotos/` 24 .webp; logos reutilizados de `assets/partners/`, sin duplicados)
 │   └── assets/ (~71 ficheros)
 │       ├── brand/ (5: logopagina*.jpeg/png, logo-principal*.png)
 │       ├── hero/ (5: WhatsApp Image 2026-09-*.jpeg, IMG_9200.JPG.jpeg)
@@ -103,7 +104,7 @@ proyecto_restaurant/
     ├── setupTests.js (jest-dom)
     ├── components/
     │   ├── layout/Header.jsx / Footer.jsx / WhatsAppButton.jsx
-    │   ├── inicio/Hero.jsx / Discover.jsx / Featured.jsx / Gallery.jsx / Contacto.jsx / Partners.jsx / CTA.jsx / PaquetesCompleta.jsx / Descubre.jsx / DetallePaquete.jsx / ReservarExperiencia.jsx
+    │   ├── inicio/Hero.jsx / ColibriExperiencias.jsx (rev. 2026-10-14) / Featured.jsx / Gallery.jsx / Contacto.jsx / Partners.jsx / CTA.jsx / PaquetesCompleta.jsx / Descubre.jsx (desmontado de portada 2026-10-14, filtro eliminado; se conserva como fuente de `PAQUETES_DEMO` + `Descubre.css` para DetallePaquete) / DetallePaquete.jsx / ReservarExperiencia.jsx (`Discover.jsx` eliminado 2026-10-14)
     │   ├── galeria/GaleriaCompleta.jsx (190 líneas, la más compleja)
     ├── utils/
     │   ├── useScrollReveal.js (hook IntersectionObserver)
@@ -112,7 +113,7 @@ proyecto_restaurant/
     └── styles/ (18 CSS)
         ├── global/App.css (353) / index.css (1)
         ├── layout/Header.css (285) / Footer.css (200) / WhatsAppButton.css (117)
-        ├── inicio/Hero.css (286) / Discover.css (171) / Featured.css (237) / Gallery.css (59) / DetallePaquete.css (40) / CTA.css (152) / Partners.css (123)
+        ├── inicio/Hero.css (286) / ColibriExperiencias.css (rev. 2026-10-14) / Featured.css (237) / Gallery.css (59) / DetallePaquete.css (40) / CTA.css (152) / Partners.css (123) (`Discover.css` eliminado 2026-10-14)
         ├── galeria/GaleriaBase.css (121) / GaleriaCompleta.css (5 imports) / GaleriaFiltros.css (36) / GaleriaMosaico.css (130) / GaleriaLightbox.css (178) / GaleriaResponsive.css (97)
 ```
 
@@ -136,7 +137,7 @@ flowchart LR
 
   subgraph UI ["Capa Vista (components)"]
     H["Hero"]
-    D["Discover"]
+    CB["ColibriExperiencias (rev. 2026-10-14)"]
     F["Featured"]
     G["Gallery"]
     P["Partners"]
@@ -151,7 +152,6 @@ flowchart LR
     SR["useScrollReveal<br/>IntersectionObserver"]
   end
 
-  EU --> D
   EU --> F
   EU --> DP
   EU --> P
@@ -185,7 +185,7 @@ flowchart TD
   APP --> WA["WhatsAppButton"]
 
   MAIN -- "rama inicio (default)" --> H["Hero"]
-  MAIN -- "rama inicio" --> DI["Discover"]
+  MAIN -- "rama inicio" --> CB1["ColibriExperiencias<br/>iframe prototipo"]
   MAIN -- "rama inicio" --> FE["Featured<br/>onVerDetalle(i)"]
   MAIN -- "rama inicio" --> GA["Gallery<br/>onAbrirFoto(i)"]
   MAIN -- "rama inicio" --> PA["Partners"]
@@ -199,7 +199,7 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  HERO["#inicio HERO"] --> EXP["#experiencias DISCOVER<br/>6 categorías"]
+  HERO["#inicio HERO"] --> EXP["#experiencias COLIBRI<br/>chat + medidor + mapa"]
   EXP --> PAQ["#paquetes FEATURED<br/>8 cards"]
   PAQ -- "Ver detalles → #paquete/N" --> DET["DETALLE PAQUETE<br/>incluye + FAQ + reserva WA"]
   DET -- "← Volver #paquetes" --> PAQ
@@ -407,10 +407,12 @@ Campo `clase`: `'' | 'green' | 'blue'` → color del tag en `Featured`.
 - **Efecto:** `setInterval(next, INTERVAL)` + cleanup.
 - **Render:** `section.hero#inicio` → `slides.map div.hero-bg[.active/.exit]` (`backgroundImage`) + `.hero-overlay` + `.hero-content` (eyebrow `MANAURE VIVE`, `h1`, `p`, 2 `a.btn`: `#experiencias` / `#paquetes`) + `.hero-slogan` ("¡Vive lo extraordinario!") + `.hero-dots` + `.hero-progress-bar[animationDuration=INTERVAL]`.
 
-### 8.5 `inicio/Discover.jsx` (rev. 2026-09-27: círculos filtran en la sección, sin redirigir)
+### 8.5 `inicio/ColibriExperiencias.jsx` (rev. 2026-10-14: integra el prototipo; `Discover.jsx` eliminado de la portada)
 
-- **Props/estado:** ninguno salvo `temaIdx:number|null` local. `categoriasEcoturismo[6]` + mapa por orden a intereses + `PAQUETES_DEMO` (importado de `Descubre.jsx`).
-- **Render:** `section.discover#experiencias[data-reveal]` → head + `.circulos-grid`: `button.circulo-tema[.active]` (toggle, sin navegar) + `.temas-resultados` (conteo + filas `a.tema-resultado[href=#paquete/N]` con foto/título/precio) + banner `descubrir-banner`. Sin rutas nuevas; `#descubre/<id>` y `interesInicial` eliminados de `App`/`Descubre`.
+- **Props/estado:** ninguno salvo `alto:number=980` local. `marcoRef` al iframe.
+- **Efecto:** `message listener`: solo actualiza si `event.origin === location.origin`, `event.source === iframe.contentWindow` y `event.data.type === 'colibri-prototype:height'` (mínimo 700px). Comunicación limitada al mismo origen.
+- **Render:** `section.colibri-experiencias#experiencias[aria-label]` → `iframe[title="Pregúntale al Colibrí: experiencias de Manaure"][loading=lazy][src=PUBLIC_URL/prototipo-colibri/]` (relativo: sirve en dev, gh-pages y Vercel) + `ColibriExperiencias.css` (ancho 100%, sin desborde; `scroll-margin` heredado global). Altura inicial 700/mínima 700; el prototipo informa `body.scrollHeight` (rev. 2026-10-14: antes `documentElement.scrollHeight`, que nunca bajaba del alto del iframe y dejaba ~255px muertos).
+- **Prototipo** (`public/prototipo-colibri/index.html` autocontenido): conversación con el guía + visor de fotos + medidor de adrenalina (5 niveles) + tarjeta de plan (WhatsApp `573012706114` + botón «Ver en el mapa 3D» → `../brochure/mapa-3d.html`, **recurso faltante, sin ruta local**) + enlace «Volver a Manaure Vive». Datos demo sin verificar (precios $115.000–$790.000, alturas, duraciones).
 
 ### 8.6 `inicio/Featured.jsx` — muestra 8 de 10 (`PAQUETES_VISIBLES = 8`)
 
@@ -459,7 +461,7 @@ Campo `clase`: `'' | 'green' | 'blue'` → color del tag en `Featured`.
 
 ### 8.12 Entry points
 
-- **`src/components/inicio/Descubre.jsx` (rev. 2026-09-26):** `PAQUETES_DEMO[6]` remapeados a nuevos índices (0 Adrenalina, 1 Cumbres, 3 Metallura, 6 Sabores, 5 Safari, 2 Grano-Fruta) + `DESTACADOS_DEMO[3]` (Cumbres/Adrenalina/Sabores). Avatares apilados + texto socios (2 por demo, sin cambios de diseño).
+- **`src/components/inicio/Descubre.jsx` (desmontado de la portada 2026-10-14, filtro e intereses eliminados a petición; se conserva el fichero como fuente de datos + `Descubre.css` para la ficha de DetallePaquete)** (rev. 2026-09-26): `PAQUETES_DEMO[6]` remapeados a nuevos índices (0 Adrenalina, 1 Cumbres, 3 Metallura, 6 Sabores, 5 Safari, 2 Grano-Fruta) + `DESTACADOS_DEMO[3]` (Cumbres/Adrenalina/Sabores). Avatares apilados + texto socios (2 por demo, sin cambios de diseño).
 - **Fix filtros Descubre (2026-09-26, bug grave):** intereses fuera del reveal (`data-reveal` quitado + blindaje `opacity:1`) para que la selección nunca pueda quedar invisible (solo verde + sombra, sin badge/check extra); duraciones honestas `[Día completo, Fin de semana]` (se eliminó “Medio día” huérfano que daba 0 resultados); toggle-off en duración/estilo/compañía; estilo y compañía ahora sí filtran (`estilos[]`/`companias[]` por demo); botón “Limpiar filtros” como enlace sutil en cabecera y estado vacío (diseño previo restaurado; botón `db-find` sin flecha `→`); `db-find` sticky móvil con safe-area). Regresión en `src/Descubre.filtros.test.js` (6 tests: +reveal, +círculo, +acordeón móvil).
 - **Fix pantalla vacía tras buscar (2026-09-26, causa raíz):** el loader desmontaba hero/filtro/resultados y al remontar los nodos `data-reveal` quedaban sin `is-visible` (el observer de `App` no se re-ejecuta) → `opacity:0` permanente en navegador real. `Descubre` ahora re-sincroniza su reveal con efecto local en `[cargando]` (mismo observer/threshold). Cubierto por test reveal con `IntersectionObserver` simulado.
 - **Filtro móvil opción A + círculos (2026-09-27):** hero compacto móvil (320px, sin párrafo); `GrupoColapsable` **solo-móvil** (`plegable`, PC idéntico a antes) incluyendo intereses; barra `db-find-bar` **fija** abajo en móvil (`fixed` + `safe-area`, `.db-page` con `padding-bottom` compensado); filtro compacto en PC (menos padding, título 22px, choices 68px).
@@ -493,7 +495,7 @@ Campo `clase`: `'' | 'green' | 'blue'` → color del tag en `Featured`.
 ```mermaid
 flowchart TD
   APP2["App.js"] -- "deps [vistaGaleria, indicePaquete]" --> SR2["useScrollReveal()"]
-  SR2 -- "ref + .is-visible" --> DOM["[data-reveal] en Hero/Discover/Featured/Gallery/Partners/CTA"]
+  SR2 -- "ref + .is-visible" --> DOM["[data-reveal] en Hero/Featured/Gallery/Partners/CTA"]
   G2["Galeria.utils useGaleria()"] --> GC2["GaleriaCompleta filtros"]
 ```
 
@@ -512,7 +514,7 @@ flowchart TD
 }
 ```
 
-Paleta funcional: verde selva `#06452f` (confianza/naturaleza), crema `#f7f4ec` (Discover/Contacto/Featured/Partners), etiquetas por categoría (§7.2), CTA con foto de fondo + overlay. (2026-09-26: se probaron arena/salvia en Featured/Partners y se revirtieron a crema por gusto del dueño.)
+Paleta funcional: verde selva `#06452f` (confianza/naturaleza), crema `#f7f4ec` (Contacto/Featured/Partners), etiquetas por categoría (§7.2), CTA con foto de fondo + overlay. (2026-09-26: se probaron arena/salvia en Featured/Partners y se revirtieron a crema por gusto del dueño.)
 
 Tipografías: `Playfair Display` (títulos serif), `Montserrat` (cuerpo), `Caveat` (slogans manuscritos: "¡Vive lo extraordinario!", "¡Tu próxima aventura!").
 
@@ -520,13 +522,13 @@ Tipografías: `Playfair Display` (títulos serif), `Montserrat` (cuerpo), `Cavea
 
 | CSS                               | Líneas | Estiliza                                                                        |
 | --------------------------------- | ------- | ------------------------------------------------------------------------------- |
-| `global/App.css`                | 353     | Tokens, base, loader, scroll-reveal                                             |
+| `global/App.css`                | 353+    | Tokens, base, loader, scroll-reveal + cabeceras compartidas `.section-ecoturismo/h2` (rev. 2026-10-14: rescatadas de `Discover.css`) |
 | `global/index.css`              | 1       | Solo comentario                                                                 |
 | `layout/Header.css`             | 285     | Header 86px fijo, brand, nav,`.active`, hamburguesa, `reserve-top`          |
 | `layout/Footer.css`             | 200     | Footer verde, brand/socials/links, bottom                                       |
 | `layout/WhatsAppButton.css`     | 117+    | Botón flotante fixed/z-1100 (24px PC, 20px móvil), tooltip, pulse; sube solo con barra (`con-barra-detalle` 88px, `en-descubre` 150px) |
 | `inicio/Hero.css`               | 286     | Slider fullscreen, fade 900ms`.active/.exit`, overlay, dots, progress-bar     |
-| `inicio/Discover.css`           | 171     | Fondo crema, grid cards, icono circular                                         |
+| `inicio/ColibriExperiencias.css` | 11      | Contenedor `overflow:hidden`, iframe 100% sin borde (rev. 2026-10-14; reemplaza a `Discover.css`, eliminado) |
 | `inicio/Featured.css`           | 237     | Cards grid,`.featured-tag(.green/.blue)`, `.featured-media` fondo `#06452f` (2026-09-26, antes beige), precio, `small-btn`               |
 | `inicio/Gallery.css`            | 59      | Fondo`#06452f`, grid preview                                                  |
 | `inicio/DetallePaquete.css`     | 40+     | Layout encabezado copy+imagen, beneficios, FAQ, CTA + galería mockup (384px/cover/overlay), convenios compactos, relacionados; thumbs fondo `#06452f` (2026-09-26) |
@@ -544,7 +546,7 @@ Tipografías: `Playfair Display` (títulos serif), `Montserrat` (cuerpo), `Cavea
 1. **Loader:** `logo-principal-completo.png` + spinner, 1200ms.
 2. **Header:** fijo 86px, logo izq, nav centro (7 links), lupa decorativa + botón Reservar (WhatsApp) der.; móvil hamburguesa.
 3. **Hero `#inicio`:** fullscreen, 5 fondos rotando 5s + fade 900ms, overlay oscuro, eyebrow + H1 + 2 CTAs + slogan + dots + progress-bar.
-4. **Discover `#experiencias`:** fondo crema, 6 cards categoría (imagen + icono circular + label) → `#paquetes`.
+4. **Colibrí `#experiencias` (rev. 2026-10-14, reemplaza a Discover):** iframe del prototipo «Pregúntale al Colibrí» (conversación + medidor de adrenalina), altura dinámica validada.
 5. **Featured `#paquetes`:** 8 cards de 10 (foto + tag color + precio + proveedor `2 +N más` + meta ubicación/duración + botón detalle).
 6. **Gallery preview `#destinos`:** fondo verde, ~13 fotos, click → `#galeria`.
 7. **Partners `#socios`:** marquee infinito 10 logos duplicados (20 nodos).
@@ -556,7 +558,7 @@ Tipografías: `Playfair Display` (títulos serif), `Montserrat` (cuerpo), `Cavea
 flowchart TD
   L["Loader 1200ms"] --> HD["Header fijo 86px"]
   HD --> HE["Hero fullscreen slider"]
-  HE --> DI2["Discover crema 6 cards"]
+  HE --> CB2["Colibri iframe experiencias"]
   DI2 --> FE2["Featured 8 cards"]
   FE2 --> GA2["Gallery preview verde"]
   GA2 --> PA2["Partners marquee"]
@@ -579,6 +581,7 @@ flowchart TD
 | `galeria/Naturaleza/`  | 13 | `naturaleza1..13.jpeg` (Metallura)                                                                                                                                       |
 | `galeria/Gastronomia/` | 15 | Mixto`.HEIC(9)+.JPG(2)+.MOV(3)` — solo 5 usados en código (`12.JPG, 8.jpg, 9/10/11.MOV`), resto huérfanos                                                           |
 | `videos/recuerdos/`    | 3  | `WhatsApp Video 2026-08-20*.mp4` (no importados, reserva)                                                                                                                |
+| `prototipo-colibri/` (rev. 2026-10-14) | 26 | `index.html` autocontenido + `colibri.webp` + `fotos/` 24 .webp; logos → `../assets/partners/` (reutilizados, 0 duplicados) |
 
 Convención: locales vía `PUBLIC_URL/assets/...`; externos solo Unsplash (categorías + 4 fotos Tours/Momentos/Cultura).
 
@@ -630,14 +633,15 @@ flowchart TD
 
 ## 14. Tests
 
-`src/App.test.js` (RTL + jest-dom, `beforeEach: location.hash=''` + `src/Descubre.filtros.test.js` con 6 tests + `src/Reservar.test.js` con 5 tests; total 16 tests en verde, incluye clase de body por vista para el botón flotante):
+`src/App.test.js` (5 tests) + `src/Experiencias.test.js` (2 tests) + `src/Reservar.test.js` (5 tests); total 12 tests en verde (rev. 2026-10-14: filtro Descubre desmontado, su test eliminado). `src/setupTests.js` mockea `scrollIntoView`/`scrollTo` (jsdom no los implementa; sin mock, los errores async de `App.js:desplazarSegunHash` tumban tests al azar):
 
 | # | Acción                                        | Aserción                                                                                        |
 | - | ---------------------------------------------- | ------------------------------------------------------------------------------------------------ |
 | 1 | Render inicial                                 | Heading hero`/Naturaleza, cultura, gastronomía y experiencias/` existe                        |
 | 2 | Click preview`alt=/Experiencia de aventura/` | `hash==='#galeria'` + dialog `/Aventura en Manaure/`; click tab `Naturaleza` cierra dialog |
 | 3 | Click`button /ver detalles/`                 | `hash==='#paquete/0'` + heading `/Adrenalina Serrana/` + `/incluye el paquete/` (antes: Ruta de senderismo, actualizado 2026-09-26) |
-| 4 | Ir a paquete + click`link /^Experiencias$/`  | Heading`/Descubre tu experiencia/` (paquete base: Adrenalina Serrana, actualizado 2026-09-26) |
+| 4 | Ir a paquete + click`link /^Experiencias$/`  | `section#experiencias` + iframe `title=/Pregúntale al Colibrí/` (antes: heading `/Descubre tu experiencia/` de Discover, eliminado 2026-10-14) |
+| 5 | `Experiencias.test.js`: hash `#experiencias` | Sin redirigir; existen `#experiencias`, iframe del Colibrí y heading `/vive momentos/` de Featured (test del filtro Descubre eliminado con la sección 2026-10-14) |
 
 Ejecutar: `npm test` (watch) / `CI=true npm test` (una vez).
 

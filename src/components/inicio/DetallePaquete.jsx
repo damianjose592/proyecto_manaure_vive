@@ -66,7 +66,6 @@ function DetallePaquete({ paquete, onReservar }) {
   const [documento, setDocumento] = useState('');
   const [telefono, setTelefono] = useState('');
   const [recogida, setRecogida] = useState('');
-  const [modalAbierto, setModalAbierto] = useState(false);
   const [favorito, setFavorito] = useState(false);
   const [preguntaAbierta, setPreguntaAbierta] = useState(null);
   const [mostrarConvenios, setMostrarConvenios] = useState(false);
@@ -112,14 +111,21 @@ function DetallePaquete({ paquete, onReservar }) {
   const total = tienePrecio ? adultos * precioAdulto + ninos * precioNino : 0;
 
   const mensaje = [
-    `Hola Manaure Vive, quiero reservar: ${paquete.titulo}.`,
-    `Fecha: ${fecha}. Viajeros: ${adultos} adulto(s), ${ninos} ni\u00f1o(s), ${bebes} beb\u00e9(s).`,
-    tienePrecio ? `Total estimado: ${formatoCOP(total)}.` : 'Quedo atento al precio y la disponibilidad.',
-    nombre ? `Nombre: ${nombre}.` : '',
-    documento ? `Doc: ${documento}.` : '',
-    telefono ? `Tel: ${telefono}.` : '',
-    recogida ? `Punto de encuentro: ${recogida}.` : '',
-  ].filter(Boolean).join(' ');
+    '\u{1F33F} *\u00a1Hola Manaure Vive!* \u{1F33F}',
+    '',
+    `Quiero reservar la experiencia: *${paquete.titulo}*`,
+    '',
+    `\u{1F4C5} *Fecha:* ${fecha}`,
+    `\u{1F465} *Viajeros:* ${adultos} adulto(s), ${ninos} ni\u00f1o(s), ${bebes} beb\u00e9(s)`,
+    tienePrecio ? `\u{1F4B0} *Total estimado:* ${formatoCOP(total)}` : '\u{1F4B0} Precio a confirmar',
+    '',
+    nombre ? `\u{1F464} *Nombre:* ${nombre}` : '',
+    telefono ? `\u{1F4F1} *Tel\u00e9fono:* ${telefono}` : '',
+    documento ? `\u{1FAAA} *Documento:* ${documento}` : '',
+    recogida ? `\u{1F4CD} *Punto de encuentro:* ${recogida}` : '',
+    '',
+    'Quedo atento(a) a la disponibilidad y los detalles del plan. \u00a1Gracias! \u{1F331}',
+  ].filter(Boolean).join('\n');
   const reservaUrl = `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(mensaje)}`;
 
   const destacados = [
@@ -553,60 +559,11 @@ function DetallePaquete({ paquete, onReservar }) {
               >
                 Reservar por WhatsApp
               </a>
-              {onReservar && (
-                <button type="button" className="detalle-btn-ghost" onClick={onReservar}>
-                  o reservar con el paso a paso
-                </button>
-              )}
               <p className="detalle-confianza">Sin pagos por adelantado &middot; Confirmaci&oacute;n por WhatsApp</p>
             </div>
           </aside>
         </div>
       </div>
-
-      <div className="detalle-barra">
-        <div className="detalle-barra-inner">
-          <div className="detalle-barra-precio">
-            <span>{tienePrecio ? 'Desde' : 'Precio'}</span>
-            <strong>{tienePrecio ? formatoCOP(precioAdulto) : 'Consultar'}</strong>
-          </div>
-          <button type="button" className="detalle-barra-btn" onClick={() => setModalAbierto(true)}>
-            Personalizar y reservar
-          </button>
-        </div>
-      </div>
-
-      {modalAbierto && (
-        <div className="detalle-modal-backdrop" onClick={() => setModalAbierto(false)}>
-          <div className="detalle-modal" onClick={e => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="Personalizar reserva">
-            <div className="detalle-modal-head">
-              <h3>Personalizar tu reserva</h3>
-              <button type="button" onClick={() => setModalAbierto(false)} aria-label="Cerrar">&times;</button>
-            </div>
-            <label className="detalle-field-label">Fecha de la experiencia</label>
-            <input
-              type="date"
-              value={fecha}
-              min={hoyISO()}
-              onChange={e => setFecha(e.target.value)}
-              className="dt-input"
-            />
-            <span className="detalle-field-label">&iquest;Qui&eacute;nes viajan?</span>
-            <div className="dt-viajeros">{bloqueViajeros}</div>
-            <span className="detalle-field-label">Datos del cliente</span>
-            <div className="dt-datos">{bloqueDatos}</div>
-            {bloqueTotal}
-            <a
-              className="detalle-btn-primary"
-              href={reservaUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Confirmar por WhatsApp <span aria-hidden="true">&rarr;</span>
-            </a>
-          </div>
-        </div>
-      )}
 
       {fotoVisor && (
         <div

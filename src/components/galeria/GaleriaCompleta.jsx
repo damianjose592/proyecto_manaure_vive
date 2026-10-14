@@ -129,7 +129,6 @@ function GaleriaCompleta({ indiceInicial = null }) {
         </div>
 
         <div className="galeria-head-actions">
-          <span className="galeria-meta">COLOMBIA • {totalFotos} FOTOS</span>
           <p className="galeria-note">
             Naturaleza, cultura, gastronomía y experiencias{' '}
             <span className="galeria-note-highlight">en un solo lugar</span>

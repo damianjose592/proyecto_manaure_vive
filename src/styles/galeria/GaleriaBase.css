@@ -100,28 +100,28 @@
   display: inline-block;
   white-space: nowrap;
 }
-/* Curva nace en el borde izquierdo de la nota (la N de Naturaleza)
-   y se extiende por debajo de todo el texto. */
+/* Curva estilo slogan (inicio y pie de página):
+   nace en la N de Naturaleza y se extiende por debajo de todo el texto. */
 .galeria-note::after {
   content: "";
   position: absolute;
-  left: 0;
-  right: -48px;
-  bottom: 6px;
-  height: 10px;
+  left: -14px;
+  right: -24px;
+  bottom: 1px;
+  height: 6px;
   background: transparent;
-  border-top: 4px solid #f28c18;
-  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  border-top: 3px solid #f28c18;
+  border-radius: 100% 100% 0 0 / 100% 100% 0 0;
 }
 .galeria-note::before {
   content: "";
   position: absolute;
-  left: 25px;
-  right: -40px;
-  bottom: -2px;
-  height: 7px;
+  left: 8px;
+  right: -14px;
+  bottom: -3px;
+  height: 5px;
   background: transparent;
   border-top: 2px solid #f5a623;
-  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  border-radius: 100% 100% 0 0 / 100% 100% 0 0;
   opacity: 0.9;
 }

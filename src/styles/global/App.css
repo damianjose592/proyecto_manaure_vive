@@ -217,6 +217,53 @@ body {
   color: var(--color-secondary-light);
 }
 
+/* ── CABECERAS DE SECCIÓN COMPARTIDAS ── */
+/* (rev. 2026-10-14: rescatadas de Discover.css al eliminar Discover; las usan Featured, Gallery, Partners, Contacto y Galería) */
+.section-head.center {
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+  margin: 0 auto 20px;
+  text-align: center;
+}
+.section-head.center .eyebrow {
+  margin-bottom: 7px;
+  color: #f28c18;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+.section-ecoturismo {
+  padding: 39px var(--page-side-padding) 42px;
+}
+.section-head h2,
+.featured h2,
+.partners h2,
+.gallery h2 {
+  margin: 0;
+  color: #06452f;
+  font-family: var(--font-title);
+  font-size: clamp(30px, 3vw, 38px);
+  font-weight: 700;
+  line-height: 1;
+}
+.section-head p,
+.featured-title p,
+.partners-head p,
+.gallery-head p {
+  max-width: 580px;
+  margin: 8px auto 0;
+  color: #68766e;
+  font-size: 13px;
+  line-height: 1.35;
+}
+@media (max-width: 560px) {
+  .section-ecoturismo {
+    padding: 42px 18px 46px;
+  }
+}
+
 /* ── BOTONES ── */
 .btn {
   display: inline-flex;
