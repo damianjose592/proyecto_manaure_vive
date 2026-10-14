@@ -95,7 +95,6 @@ function GaleriaCompleta({ indiceInicial = null }) {
   }, [seleccionada, cerrar, avanzar]);
 
   const fotoActiva = seleccionada !== null ? fotosFiltradas[seleccionada] : null;
-  const totalFotos = fotosFiltradas.length;
 
   const renderMedia = (foto, isLightbox = false) => {
     if (foto.tipo === 'video') {
